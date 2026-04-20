@@ -1,0 +1,16 @@
+model,cv_macro_f1_mean,cv_macro_f1_std,test_accuracy,test_macro_f1,train_time_s,inference_ms,accuracy,macro_f1
+LR — no balancing,0.3479,0.0128,0.5324,0.3676,5.15,0.0527,,
+LR — class weighted,0.5789,0.0113,0.6111,0.6239,5.72,0.0607,,
+LR — class weighted,0.4939,0.0117,0.5149,0.5261,4.48,0.0532,,
+RF — no balancing,0.5553,0.008,0.6482,0.6058,7.05,0.1162,,
+RF — class weighted,0.5786,0.0069,0.6672,0.6541,10.07,0.0887,,
+XGBoost — baseline,,,,,43.29,0.0142,0.4552,0.3358
+XGBoost — sample weights,,,,,47.26,0.0148,0.4552,0.3358
+XGBoost — baseline,,,,,52.1,0.0143,0.4552,0.3358
+XGBoost — sample weights,,,,,50.47,0.0122,0.4552,0.3358
+XGBoost — sample weights,,,,,52.72,0.0157,0.4345,0.4123
+XGBoost — focal loss,,,,,42.66,0.0,0.4814,0.378
+XGBoost — baseline,,,,,127.6,0.0302,0.5408,0.4696
+XGBoost — sample weighted,,,,,112.04,0.0287,0.5524,0.5479
+XGBoost — focal loss,,,0.547,0.4724,90.41,0.0,,
+Zero-Shot (MiniLM),,,0.2444,0.1914,0.0,5.5507,,
