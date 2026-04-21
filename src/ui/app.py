@@ -93,6 +93,38 @@ def chat(message: str, history: list, current_ticket_id: str, use_cache: bool):
     if not message.strip():
         yield history, current_ticket_id, "", gr.update(), ""
         return
+    
+    # Catch greetings/noise before classification
+    noise_patterns = ["hi", "hello", "hey", "thanks", "ok", "okay", "bye", "yes", "no"]
+    if message.strip().lower() in noise_patterns:
+        history = history + [
+            {"role": "user", "content": message},
+            {"role": "assistant", "content": "👋 Hello! Please describe your issue and I'll create a support ticket for you."}
+        ]
+        yield history, current_ticket_id, "", gr.update(), ""
+        return
+    
+    # Only flag mismatch if confidence is high enough to trust
+    clf_result   = _clf.predict(subject='', body=message, tags=None)
+    new_category = clf_result['category']
+    confidence   = clf_result['confidence']
+
+    # If confidence is low (< 0.60), don't flag as mismatch — give benefit of doubt
+    if current_ticket_id and confidence >= 0.60:
+        ticket = get_ticket(current_ticket_id)
+        if not _category_matches(new_category, ticket['category']):
+            mismatch_msg = (
+                f"⚠️ This message appears to be about **{new_category}**, "
+                f"but the current ticket `{current_ticket_id}` is for **{ticket['category']}**.\n\n"
+                f"Please **create a new ticket** for this issue, or rephrase your message "
+                f"if it's related to your current {ticket['category']} issue."
+            )
+            history = history + [
+                {"role": "user",      "content": message},
+                {"role": "assistant", "content": mismatch_msg}
+            ]
+            yield history, current_ticket_id, "", gr.update(), ""
+            return
 
     # Quick classify to check category
     clf_result = _clf.predict(subject='', body=message, tags=None)
