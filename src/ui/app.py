@@ -88,11 +88,82 @@ def close_current_ticket(ticket_id: str):
     choices = [(_ticket_label(t), t['id']) for t in tickets]
     return "✅ Ticket marked as resolved.", gr.update(choices=choices)
 
+def handle_command(cmd: str, history: list, current_ticket_id: str):
+    cmd = cmd.strip().lower()
+
+    # Always show typed command in chat
+    history = history + [{"role": "user", "content": cmd}]
+
+    if cmd == "/help":
+        msg = """
+Available commands:
+
+/new - Start a new ticket
+/resolve - Mark current ticket resolved
+/status - Show active ticket status
+/schedule - Request a support call
+/help - Show this help menu
+"""
+        history.append({"role": "assistant", "content": msg})
+        return history, current_ticket_id, "", gr.update(), ""
+
+    if cmd == "/new":
+        history.append({
+            "role": "assistant",
+            "content": "🎫 Ready to create a new ticket. Please describe your issue."
+        })
+        return history, None, "", gr.update(), ""
+
+    if cmd == "/resolve":
+        if not current_ticket_id:
+            history.append({"role": "assistant", "content": "No active ticket to resolve."})
+            return history, current_ticket_id, "", gr.update(), ""
+
+        close_ticket(current_ticket_id)
+        history.append({
+            "role": "assistant",
+            "content": f"✅ Ticket `{current_ticket_id}` marked as resolved."
+        })
+        return history, current_ticket_id, "", refresh_ticket_list(), ""
+
+    if cmd == "/status":
+        if not current_ticket_id:
+            history.append({"role": "assistant", "content": "No active ticket selected."})
+            return history, current_ticket_id, "", gr.update(), ""
+
+        t = get_ticket(current_ticket_id)
+        msg = f"""
+🎫 Ticket `{current_ticket_id}`
+
+Category: {t['category']}
+Status: {t['status']}
+Created: {t['created_at'][:10]}
+"""
+        history.append({"role": "assistant", "content": msg})
+        return history, current_ticket_id, "", gr.update(), ""
+
+    if cmd == "/schedule":
+        history.append({
+            "role": "assistant",
+            "content":
+            "📞 Support Call Request\n\nPlease reply with:\nName:\nEmail:\nPreferred Slot:"
+        })
+        return history, current_ticket_id, "", gr.update(), ""
+
+    history.append({"role": "assistant", "content": "Unknown command. Type /help"})
+    return history, current_ticket_id, "", gr.update(), ""
 
 def chat(message: str, history: list, current_ticket_id: str, use_cache: bool):
     if not message.strip():
         yield history, current_ticket_id, "", gr.update(), ""
         return
+    
+    # Slash command handling
+    if message.strip().startswith("/"):
+        result = handle_command(message, history, current_ticket_id)
+        if result:
+            yield result
+            return
     
     # Catch greetings/noise before classification
     noise_patterns = ["hi", "hello", "hey", "thanks", "ok", "okay", "bye", "yes", "no"]
@@ -104,15 +175,27 @@ def chat(message: str, history: list, current_ticket_id: str, use_cache: bool):
         yield history, current_ticket_id, "", gr.update(), ""
         return
     
-    # Only flag mismatch if confidence is high enough to trust
-    clf_result   = _clf.predict(subject='', body=message, tags=None)
-    new_category = clf_result['category']
-    confidence   = clf_result['confidence']
+    # Intelligent category handling
+    if current_ticket_id:
+        ticket = get_ticket(current_ticket_id)
+
+        # Short follow-up messages inherit current ticket category
+        if len(message.split()) <= 8:
+            new_category = ticket['category']
+            confidence = 1.0
+        else:
+            clf_result = _clf.predict(subject='', body=message, tags=None)
+            new_category = clf_result['category']
+            confidence = clf_result['confidence']
+    else:
+        clf_result = _clf.predict(subject='', body=message, tags=None)
+        new_category = clf_result['category']
+        confidence = clf_result['confidence']
 
     # If confidence is low (< 0.60), don't flag as mismatch — give benefit of doubt
     if current_ticket_id and confidence >= 0.60:
         ticket = get_ticket(current_ticket_id)
-        if not _category_matches(new_category, ticket['category']):
+        if confidence >= 0.60 and not _category_matches(new_category, ticket['category']):
             mismatch_msg = (
                 f"⚠️ This message appears to be about **{new_category}**, "
                 f"but the current ticket `{current_ticket_id}` is for **{ticket['category']}**.\n\n"
@@ -125,11 +208,6 @@ def chat(message: str, history: list, current_ticket_id: str, use_cache: bool):
             ]
             yield history, current_ticket_id, "", gr.update(), ""
             return
-
-    # Quick classify to check category
-    clf_result = _clf.predict(subject='', body=message, tags=None)
-    new_category = clf_result['category']
-    confidence   = clf_result['confidence']
 
     # ── Case 1: No active ticket — create one ────────────────────────────────
     if not current_ticket_id:
@@ -144,7 +222,6 @@ def chat(message: str, history: list, current_ticket_id: str, use_cache: bool):
             f"Confidence: **{confidence:.1%}**"
         )
         history = history + [
-            {"role": "user",      "content": message},
             {"role": "assistant", "content": system_msg}
         ]
         add_message(ticket_id, "user",      message)
@@ -185,7 +262,12 @@ def chat(message: str, history: list, current_ticket_id: str, use_cache: bool):
         prior = [m for m in prev_messages if m['role'] == 'user'][-3:]
         context_summary = " | Prior context: " + " → ".join(m['content'][:50] for m in prior)
 
-    result      = run(message + context_summary, use_cache=use_cache)
+    effective_category = new_category
+    result = run(
+        message + context_summary,
+        use_cache=use_cache,
+        forced_category=effective_category
+    )
     draft       = get_final_draft(result)
     cache_tag   = " ⚡ *cached*" if result.get("cache_hit") else ""
     full_response = (draft or "I was unable to generate a response. Please try rephrasing.") + cache_tag
@@ -211,50 +293,61 @@ def build_ui():
     with gr.Blocks(title="Customer Support Copilot") as demo:
 
         gr.HTML("""
-        <div style="text-align:center; padding:16px 0 8px 0">
-            <h1 style="margin:0">🤖 Customer Support Copilot</h1>
-            <p style="color:gray; margin:4px 0 0 0">
-                Ticket-based AI assistant for support agents
-            </p>
-        </div>
-        """)
+            <div style="text-align:center; padding:20px 0 14px 0;">
+                <h1 style="margin:0; font-size:34px;">🤖 Customer Support Copilot</h1>
+                <p style="color:#9ca3af; margin-top:6px;">
+                    Ticket-based AI assistant for support agents
+                </p>
+            </div>
+            """)
 
         with gr.Row():
             # ── Left sidebar — ticket list ────────────────────────────────────
-            with gr.Column(scale=1):
+            with gr.Column(scale=1, min_width=320):
                 gr.Markdown("### 🎫 Tickets")
 
-                new_ticket_btn = gr.Button("+ New Ticket", variant="primary", size="sm")
+                new_ticket_btn = gr.Button("+ New Ticket", variant="primary", size="lg")
 
                 ticket_list = gr.Radio(
-                    label="Select ticket",
+                    label="Select Ticket",
                     choices=[],
                     value=None,
-                    interactive=True
+                    interactive=True,
+                    container=True
                 )
 
-                close_btn    = gr.Button("✅ Mark Resolved", size="sm")
+                close_btn = gr.Button("✅ Mark Resolved", size="sm")
                 close_status = gr.Markdown("")
 
             # ── Right — chat area ─────────────────────────────────────────────
-            with gr.Column(scale=3):
+            with gr.Column(scale=4):
                 ticket_info_box = gr.Markdown("")
 
                 chatbot = gr.Chatbot(
                     label="Conversation",
-                    height=480,
-                    show_label=False,
+                    height=620,
+                    show_label=False
                 )
 
                 with gr.Row():
                     use_cache = gr.Checkbox(label="⚡ Cache", value=True, scale=0)
-                    msg_box   = gr.Textbox(
-                        placeholder="Describe your issue or ask a follow-up question...",
+                    msg_box = gr.Textbox(
+                        placeholder="Describe your issue... or type /help",
+                        lines=1,
+                        max_lines=4,
                         show_label=False,
-                        scale=5,
+                        scale=6,
                         container=False
                     )
-                    send_btn = gr.Button("Send ➤", variant="primary", scale=1)
+                    send_btn = gr.Button("Send ➤", variant="primary", scale=1, min_width=140)
+
+                gr.Markdown(
+                    """
+                    <small style="color:gray;">
+                    Commands: <b>/help</b> • <b>/new</b> • <b>/status</b> • <b>/schedule</b> • <b>/resolve</b>
+                    </small>
+                    """
+                )
 
                 with gr.Accordion("💡 Example queries", open=False):
                     gr.Examples(
@@ -315,7 +408,8 @@ def build_ui():
 if __name__ == '__main__':
     demo = build_ui()
     demo.launch(
-        server_port=7860,
-        share=False,
-        theme=gr.themes.Soft()
+        theme=gr.themes.Soft(
+            primary_hue="blue",
+            neutral_hue="slate"
+        )
     )

@@ -31,101 +31,65 @@ _llm = ChatOpenAI(
     temperature=0
 )
 
-SYSTEM_PROMPT = f"""You are an autonomous orchestrator for a customer support copilot system.
-
-Your goal is to help support agents by:
-- Understanding customer queries
-- Retrieving relevant knowledge
-- Generating high-quality draft responses
-- Iteratively improving responses when needed
-
-You have access to the following tools:
-
-- classify(query):
-  Returns: category, confidence (0–1), urgency, in_scope
-
-- retrieve(query, category):
-  Returns: JSON with relevant documents
-
-- generate(query, category, documents_json):
-  Returns: JSON with draft_response, confidence, sources_used, caveats
-
-- critique(query, draft_json, documents_json):
-  Returns: JSON with evaluation scores and should_retry flag
-
-- clarify(query, reason):
-  Returns: JSON with a clarifying question for the user
-
+SYSTEM_PROMPT = f"""
+You are an autonomous orchestrator for a customer support copilot system.
 
 ========================
-DECISION POLICY (STRICT)
+DECISION POLICY
 ========================
 
-1. ALWAYS call classify(query) first.
+1. ALWAYS call classify(query) first. If a known category is provided in the user message, trust it and skip reclassification unless the user clearly changed topics.
 
 2. If in_scope is False:
    → Call clarify(reason="out_of_scope") and STOP.
 
-3. Confidence handling (IMPORTANT — DO NOT IGNORE):
+3. Confidence handling:
 
-   - If confidence < 0.45:
-       → Call clarify(reason="low_confidence") and STOP.
+   - If confidence < 0.25:
+       → This is very uncertain.
+       → First call retrieve(query, category)
 
-   - If 0.45 ≤ confidence < 0.65:
+       If retrieved documents count == 0:
+           → Call clarify(reason="low_confidence")
+           → STOP
+
+       Else:
+           → Continue with generate()
+
+   - If 0.25 <= confidence < 0.65:
        → Proceed with retrieve(query, category)
-       → Treat this as LOW confidence internally
-       → Rely on critique() to validate and improve
+       → Use critique() carefully
+       → Do NOT clarify immediately
 
-   - If confidence ≥ 0.65:
+   - If confidence >= 0.65:
        → Proceed normally with retrieve(query, category)
 
 4. After retrieve():
-   → Call generate(query, category, documents_json)
+   → If no documents found:
+       → Call clarify(reason="ambiguous")
 
-5. After generate():
-   → Call critique(query, draft_json, documents_json)
+5. After retrieve():
+   → Call generate()
 
-6. If critique.should_retry == true AND retry_count < {config.max_retries}:
-   → Call retrieve() again, refining the query using critique feedback
-   → Call generate() again
-   → Call critique() again
+6. After generate():
+   → Call critique()
 
-7. Stop when:
-   - critique.should_retry == false
-   OR
-   - max retries reached
+7. If critique.should_retry == true AND retry_count < {config.max_retries}:
+   → Retry retrieve()
+   → Retry generate()
+   → Retry critique()
 
-8. FINAL OUTPUT:
-   → Return ONLY the final draft response (plain text)
-   → DO NOT return tool traces, JSON, or intermediate steps
-
+8. Final output:
+   → Return ONLY final draft response text.
 
 ========================
 IMPORTANT RULES
 ========================
 
-- DO NOT stop early just because confidence is moderate (0.45–0.65)
-- The system is designed to recover using retrieval + critique
-- Prefer acting over asking, unless confidence is VERY low
-
-- ALWAYS pass FULL JSON outputs between tools
-- NEVER summarize or truncate tool outputs
-
-- DO NOT hallucinate facts — rely on retrieved documents
-- If no useful documents are found, generate a safe fallback response
-
-- The final answer MUST be a clean, human-readable string
-- DO NOT return lists, objects, or JSON in the final output
-
-
-========================
-BEHAVIOR SUMMARY
-========================
-
-- Be autonomous, not overly cautious
-- Use tools intelligently
-- Iterate when needed
-- Ask clarification ONLY when truly necessary
+- Retrieval can succeed even when classification confidence is low.
+- Prefer answering over asking unnecessary clarification.
+- Use classifier as guidance, not as a hard blocker.
+- Never hallucinate facts.
 """
 
 _agent = create_react_agent(
@@ -167,7 +131,7 @@ def get_final_draft(result: dict) -> str:
     return ""
 
 
-def run(query: str, use_cache: bool = True) -> dict:
+def run(query: str, use_cache=True, forced_category=None):
     """Run the agent on a customer query, with optional semantic cache."""
 
     # 1. Check cache first
@@ -183,6 +147,8 @@ def run(query: str, use_cache: bool = True) -> dict:
             }
 
     # 2. Run the full agent pipeline
+    if forced_category:
+        query = f"[KNOWN CATEGORY: {forced_category}] {query}"
     result      = _agent.invoke({"messages": [{"role": "user", "content": query}]})
     messages = result.get("messages", [])
     print(f"[DEBUG] total messages: {len(messages)}")

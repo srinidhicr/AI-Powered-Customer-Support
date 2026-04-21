@@ -16,3 +16,5 @@ pandas
 numpy
 xgboost
 imbalanced-learn
+nltk
+rouge-score
