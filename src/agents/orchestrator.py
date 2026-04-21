@@ -27,7 +27,7 @@ _llm = ChatGoogleGenerativeAI(
 _llm = ChatOpenAI(
     model=config.llm_model,
     api_key=config.openai_api_key,
-    max_tokens=600,
+    max_tokens=4000,
     temperature=0
 )
 
@@ -184,6 +184,13 @@ def run(query: str, use_cache: bool = True) -> dict:
 
     # 2. Run the full agent pipeline
     result      = _agent.invoke({"messages": [{"role": "user", "content": query}]})
+    messages = result.get("messages", [])
+    print(f"[DEBUG] total messages: {len(messages)}")
+    for i, msg in enumerate(messages):
+        content = getattr(msg, 'content', '')
+        content_type = type(content).__name__
+        preview = str(content)[:80] if isinstance(content, str) else str(content)[:80]
+        print(f"[DEBUG] msg[{i}] type={type(msg).__name__} content_type={content_type} preview={preview}")
     final_draft = get_final_draft(result)
 
     # 3. Store in cache only if response is substantive (not a fallback)

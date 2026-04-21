@@ -62,22 +62,24 @@ def generate(query: str, category: str, documents_json: str) -> str:
 Support Category: {category}
 Customer Query: {query}
 
-Reference responses from similar past tickets:
+Retrieved knowledge base context:
 {docs_text}
 
-The reference responses above show how similar issues were handled.
-Use them as a style guide to write a professional response that:
-1. Acknowledges the customer's specific problem
-2. Provides concrete troubleshooting steps if available in the references
-3. Sets clear expectations about next steps
-4. Is empathetic and professional
+Instructions:
+1. Extract every concrete fact from the context above (system names, error types, known issues, policies, timelines).
+2. Acknowledge the customer's specific problem using those facts.
+3. If the context contains actionable steps, include them exactly.
+4. If the context is acknowledgement-only, suggest 2-3 safe, generic next steps that are logically consistent with the issue type — do NOT invent specific technical details not implied by the context.
+5. End with the appropriate escalation path if the issue cannot be resolved.
 
-Return ONLY valid JSON with no markdown formatting:
+The response must stay grounded in the retrieved context. Do not introduce facts, product names, or solutions that are not implied by the context.
+
+Return ONLY valid JSON with no markdown:
 {{
-  "draft_response": "the full draft response text here",
+  "draft_response": "full response text",
   "confidence": 0.85,
-  "sources_used": ["Doc 1", "Doc 2"],
-  "caveats": "any limitations or things the agent should verify before sending"
+  "sources_used": ["Doc 1"],
+  "caveats": "note any assumptions made"
 }}"""
 
     raw   = _llm_invoke_with_retry(prompt)
