@@ -124,12 +124,8 @@ def extract_chunks_from_result(result: dict) -> list:
     return []
 
 
-def answer_followup(
-    previous_question: str,
-    previous_response: str,
-    followup_message: str,
-    source_chunks: list | None = None,
-) -> str:
+def answer_followup( previous_question: str, previous_response: str,
+    followup_message: str, source_chunks: list | None = None) -> str:
     """
     Answer a clarification follow-up without re-running retrieval.
     This keeps the reply anchored to the previous answer and source context.
@@ -142,19 +138,23 @@ def answer_followup(
         ]
         chunk_text = "\n\nSupporting source context:\n" + "\n".join(chunk_lines)
 
-    prompt = (
-        "You are helping continue an existing customer support conversation.\n\n"
-        f"Original customer question:\n{previous_question}\n\n"
-        f"Previous assistant response:\n{previous_response}\n\n"
-        f"Customer follow-up:\n{followup_message}"
-        f"{chunk_text}\n\n"
-        "Instructions:\n"
-        "1. Answer the follow-up as a clarification of the same issue.\n"
-        "2. Stay on the same topic as the original question.\n"
-        "3. Use simpler wording when the customer sounds confused.\n"
-        "4. Do not ask a new routing question unless the previous answer truly lacked enough information.\n"
-        "5. Do not introduce a different product, business scenario, or issue type.\n"
-    )
+    prompt = f"""
+        You are helping continue an existing customer support conversation.
+        Original customer question:
+        {previous_question}
+        f"Previous assistant response:
+        {previous_response}
+        Customer follow-up:
+        {followup_message}
+        {chunk_text}
+
+        Instructions:
+        1. Answer the follow-up as a clarification of the same issue.
+        2. Stay on the same topic as the original question.
+        3. Use simpler wording when the customer sounds confused.
+        4. Do not ask a new routing question unless the previous answer truly lacked enough information.
+        5. Do not introduce a different product, business scenario, or issue type.
+    """
 
     response = _llm.invoke([
         SystemMessage(
@@ -204,7 +204,7 @@ def run(query: str, use_cache: bool = True, forced_category: str = None) -> dict
     fallback_phrases = [
         "unable to find relevant information",
         "escalate this to a human agent",
-        "please escalate",
+        "please escalate"
     ]
     if (use_cache
             and final_draft

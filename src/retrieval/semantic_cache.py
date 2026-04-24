@@ -64,7 +64,6 @@ def lookup(query: str) -> dict | None:
         print(f"[Cache HIT] similarity={hit.score:.3f} | original: '{orig_query[:60]}...'")
         cached = hit.payload.get("cached_result", {})
 
-        # 🔥 extra safety
         if not isinstance(cached.get("final_draft"), str):
             cached["final_draft"] = str(cached.get("final_draft", ""))
 
