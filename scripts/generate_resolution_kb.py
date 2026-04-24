@@ -1,9 +1,7 @@
 # scripts/generate_resolution_kb.py
-#
-# Upgrades acknowledgement-only KB answers to resolution-quality answers.
-# Saves progress incrementally — safe to interrupt and resume.
-# Run: python -m scripts.generate_resolution_kb
-
+"""
+This script generates resolution chunks to enrich the knowledge base
+"""
 import sys, os, json, time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -173,12 +171,19 @@ def main():
                 subject_str = str(row.get('subject', '') or '').strip()
                 if subject_str.lower() == 'nan':
                     subject_str = ''
+                query_str = str(row.get('query', '') or '').strip()
+                text_parts = []
+                if subject_str:
+                    text_parts.append(f"Subject: {subject_str}")
+                if query_str:
+                    text_parts.append(f"Customer issue: {query_str}")
+                text_parts.append(f"Resolution: {resolution}")
 
                 chunk = {
                     "id"      : f"resolution_{i}",
-                    "text"    : f"{subject_str}. {resolution}".strip(". ") if subject_str else resolution,
+                    "text"    : "\n".join(text_parts),
                     "answer"  : resolution,
-                    "query"   : str(row.get('query', '') or ''),
+                    "query"   : query_str,
                     "subject" : subject_str,
                     "category": str(row['category']),
                     "priority": str(row.get('priority', '') or ''),

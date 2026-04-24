@@ -1,0 +1,32 @@
+========================================================================
+DATASET RETRIEVAL EVALUATION
+========================================================================
+Loaded 9555 original KB chunks with queries
+Evaluating 240 sampled queries across categories
+
+Overall
+Method        Hit@1    Hit@3    Hit@5    MRR@5
+dense         0.863    0.950    0.975    0.909
+sparse        1.000    1.000    1.000    1.000
+hybrid        0.975    0.996    1.000    0.986
+
+By category
+Category                     Method        Hit@1    Hit@3    Hit@5    MRR@5
+Billing and Payments         dense         0.850    0.950    0.975    0.902
+Billing and Payments         sparse        1.000    1.000    1.000    1.000
+Billing and Payments         hybrid        1.000    1.000    1.000    1.000
+General Inquiry              dense         0.850    0.875    0.975    0.887
+General Inquiry              sparse        1.000    1.000    1.000    1.000
+General Inquiry              hybrid        0.975    0.975    1.000    0.981
+Human Resources              dense         0.900    0.975    1.000    0.938
+Human Resources              sparse        1.000    1.000    1.000    1.000
+Human Resources              hybrid        0.925    1.000    1.000    0.963
+Product Inquiry              dense         0.825    0.925    0.925    0.871
+Product Inquiry              sparse        1.000    1.000    1.000    1.000
+Product Inquiry              hybrid        0.950    1.000    1.000    0.975
+Returns and Exchanges        dense         0.900    1.000    1.000    0.950
+Returns and Exchanges        sparse        1.000    1.000    1.000    1.000
+Returns and Exchanges        hybrid        1.000    1.000    1.000    1.000
+Technical                    dense         0.850    0.975    0.975    0.904
+Technical                    sparse        1.000    1.000    1.000    1.000
+Technical                    hybrid        1.000    1.000    1.000    1.000

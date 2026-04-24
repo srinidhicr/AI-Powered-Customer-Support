@@ -1,36 +1,13 @@
 # src/tools/critique.py
-
-import os
-import sys
-import json
-import re
+import os, sys, json, re, time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from langchain.tools import tool
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field, field_validator
+from typing import Any
 from configs.config import config
-import time
 
-"""
-_llm = ChatGoogleGenerativeAI(
-    model=config.llm_model,
-    google_api_key=config.google_api_key
-)
-
-def _llm_invoke_with_retry(prompt: str, max_retries: int = 1) -> str:
-    for attempt in range(max_retries):
-        try:
-            return _llm.invoke(prompt).content
-        except Exception as e:
-            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                wait = 45 * (attempt + 1)
-                print(f"[Rate limit] waiting {wait}s before retry {attempt+1}/{max_retries}")
-                time.sleep(wait)
-            else:
-                raise
-    raise RuntimeError("Max retries exceeded")
-"""
 _llm = ChatOpenAI(
     model=config.llm_model,
     api_key=config.openai_api_key,
@@ -52,52 +29,69 @@ def _llm_invoke_with_retry(prompt: str) -> str:
     raise RuntimeError("Max retries exceeded")
 
 
-import time
+# ── Pydantic input schema ─────────────────────────────────────────────────────
 
-def _llm_invoke_with_retry(prompt: str, max_retries: int = 1) -> str:
-    for attempt in range(max_retries):
-        try:
-            return _llm.invoke(prompt).content
-        except Exception as e:
-            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                wait = 45 * (attempt + 1)
-                print(f"[Rate limit] waiting {wait}s before retry {attempt+1}/{max_retries}")
-                time.sleep(wait)
-            else:
-                raise
-    raise RuntimeError("Max retries exceeded")
+class CritiqueInput(BaseModel):
+    query: str = Field(description="The original customer query.")
+    draft_json: Any = Field(
+        description="JSON string or dict output from generate() tool."
+    )
+    documents_json: Any = Field(
+        description="JSON string or list of retrieved documents from retrieve() tool."
+    )
 
-@tool
-def critique(query: str, draft_json: str, documents_json: str) -> str:
+    @field_validator("draft_json", mode="before")
+    @classmethod
+    def normalise_draft(cls, v) -> str:
+        """Always return the plain draft text string."""
+        if isinstance(v, dict):
+            return v.get("draft_response", str(v))
+        if isinstance(v, str):
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, dict):
+                    return parsed.get("draft_response", v)
+            except (json.JSONDecodeError, ValueError):
+                pass
+            return v
+        return str(v)
+
+    @field_validator("documents_json", mode="before")
+    @classmethod
+    def normalise_documents(cls, v) -> list:
+        """Always return a plain list of document dicts."""
+        if isinstance(v, list):
+            return v
+        if isinstance(v, dict):
+            return v.get("documents", [])
+        if isinstance(v, str):
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, list):
+                    return parsed
+                if isinstance(parsed, dict):
+                    return parsed.get("documents", [])
+            except (json.JSONDecodeError, ValueError):
+                pass
+        return []
+
+
+# ── Tool ──────────────────────────────────────────────────────────────────────
+
+@tool(args_schema=CritiqueInput)
+def critique(query: str, draft_json: Any, documents_json: Any) -> str:
     """Evaluates a draft response for quality, grounding and tone.
     ALWAYS call generate() before this tool.
     If overall_score < 0.70, the orchestrator should retry retrieve() and generate().
-
-    Args:
-        query:          The original customer query.
-        draft_json:     JSON string output from generate() tool.
-        documents_json: JSON string output from retrieve() tool.
-
-    Returns:
-        JSON string with keys: grounding_score, tone_score, completeness_score,
-        overall_score, hallucination_flag, feedback, should_retry
+    Returns a JSON string with keys: grounding_score, tone_score, completeness_score,
+    overall_score, hallucination_flag, feedback, should_retry.
     """
-    # Parse draft
-    try:
-        draft_result = json.loads(draft_json)
-        draft = draft_result.get("draft_response", draft_json)
-    except (json.JSONDecodeError, TypeError):
-        draft = str(draft_json)
-
-    # Parse documents
-    try:
-        retrieve_result = json.loads(documents_json)
-        documents = retrieve_result.get("documents", [])
-    except (json.JSONDecodeError, TypeError):
-        documents = []
+    # After Pydantic validation these are already clean types
+    draft: str    = draft_json
+    documents: list = documents_json
 
     docs_text = "\n".join(
-        f"- {d.get('text', d.get('body', ''))[:300]}"
+        f"- {d.get('text', d.get('answer', d.get('body', '')))[:300]}"
         for d in documents[:5]
     ) or "No source documents available."
 
@@ -141,7 +135,7 @@ Return ONLY valid JSON with no markdown:
             "completeness_score" : 0.5,
             "overall_score"      : 0.5,
             "hallucination_flag" : False,
-            "feedback"           : "Could not parse evaluation — review manually."
+            "feedback"           : "Could not parse evaluation — review manually.",
         }
 
     result["should_retry"] = result.get("overall_score", 0) < config.critique_threshold

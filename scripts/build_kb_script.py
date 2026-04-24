@@ -1,4 +1,7 @@
 # scripts/build_kb_script.py
+"""
+This script is to build the complete knowledge base.
+"""
 
 import sys, os, json
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -40,7 +43,7 @@ def main():
     print("=" * 55)
 
     print("\n[1/4] Preprocessing dataset → kb_chunks.jsonl ...")
-    from data.knowledge_base.prepare_kb_database import prepare
+    from scripts.prepare_kb_database import prepare
     prepare()
 
     print("\n[2/4] Merging with resolution chunks (if available) ...")

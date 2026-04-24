@@ -18,3 +18,5 @@ xgboost
 imbalanced-learn
 nltk
 rouge-score
+gradio
+ragas

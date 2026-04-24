@@ -1,28 +1,20 @@
 # src/agents/orchestrator.py
 
-import os
-import sys
+import os, sys, json
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, ToolMessage
+from langchain_openai import ChatOpenAI
+
 from configs.config import config
 from src.retrieval.semantic_cache import lookup, store
-from langchain_core.messages import SystemMessage
-from langchain_openai import ChatOpenAI
 
 from src.tools.classify import classify
 from src.tools.retrieve import retrieve
 from src.tools.generate import generate
 from src.tools.critique import critique
 from src.tools.clarify  import clarify
-
-"""
-_llm = ChatGoogleGenerativeAI(
-    model=config.llm_model,
-    google_api_key=config.google_api_key
-)
-"""
 
 _llm = ChatOpenAI(
     model=config.llm_model,
@@ -38,58 +30,38 @@ You are an autonomous orchestrator for a customer support copilot system.
 DECISION POLICY
 ========================
 
-1. ALWAYS call classify(query) first. If a known category is provided in the user message, trust it and skip reclassification unless the user clearly changed topics.
+1. ALWAYS call classify(query) first.
+   If the message starts with [KNOWN CATEGORY: <cat>], extract the category,
+   set confidence = 1.0, and SKIP calling classify again.
 
-2. If in_scope is False:
+2. If confidence is extremely low or the query is clearly out of scope:
    → Call clarify(reason="out_of_scope") and STOP.
 
 3. Confidence handling:
-
-   - If confidence < 0.25:
-       → This is very uncertain.
-       → First call retrieve(query, category)
-
-       If retrieved documents count == 0:
-           → Call clarify(reason="low_confidence")
-           → STOP
-
-       Else:
-           → Continue with generate()
-
-   - If 0.25 <= confidence < 0.65:
-       → Proceed with retrieve(query, category)
-       → Use critique() carefully
-       → Do NOT clarify immediately
-
-   - If confidence >= 0.65:
-       → Proceed normally with retrieve(query, category)
+   - confidence < 0.25  → call retrieve(); if 0 docs → clarify(reason="low_confidence")
+   - 0.25–0.65          → call retrieve(); continue with generate(); use critique() carefully
+   - >= 0.65            → call retrieve() normally
 
 4. After retrieve():
-   → If no documents found:
-       → Call clarify(reason="ambiguous")
+   → If no documents found → call clarify(reason="ambiguous") and STOP.
+   → Otherwise call generate()
 
-5. After retrieve():
-   → Call generate()
-
-6. After generate():
+5. After generate():
    → Call critique()
 
-7. If critique.should_retry == true AND retry_count < {config.max_retries}:
-   → Retry retrieve()
-   → Retry generate()
-   → Retry critique()
+6. If critique.should_retry == true AND retry_count < {config.max_retries}:
+   → Retry retrieve() → generate() → critique()
 
-8. Final output:
-   → Return ONLY final draft response text.
+7. Final output:
+   → Return ONLY the final draft response as plain text.
+   → Do NOT wrap it in JSON. Do NOT add commentary. Just the response text.
 
 ========================
-IMPORTANT RULES
+RULES
 ========================
-
-- Retrieval can succeed even when classification confidence is low.
-- Prefer answering over asking unnecessary clarification.
-- Use classifier as guidance, not as a hard blocker.
-- Never hallucinate facts.
+- Never hallucinate facts not in the retrieved documents.
+- Prefer answering over unnecessary clarification.
+- The final message in the conversation must be the plain-text draft for the agent.
 """
 
 _agent = create_react_agent(
@@ -98,78 +70,148 @@ _agent = create_react_agent(
     prompt=SystemMessage(content=SYSTEM_PROMPT)
 )
 
-def get_final_draft(result: dict) -> str:
-    messages = result.get("messages", [])
-    if not messages:
-        return ""
 
-    from langchain_core.messages import AIMessage
+def get_final_draft(result: dict) -> str:
+    """Extract the last meaningful plain-text AIMessage from the agent result."""
+    messages = result.get("messages", [])
     for msg in reversed(messages):
+        content = getattr(msg, "content", "")
+        if isinstance(content, str) and content.strip() and not isinstance(msg, AIMessage):
+            return content.strip()
         if not isinstance(msg, AIMessage):
             continue
-        content = msg.content
-        
-        if isinstance(content, str) and content.strip():
-            return content.strip()
-        
+        # Skip messages that are just tool-call invocations (no text content)
         if isinstance(content, list):
-            for item in content:
-                if isinstance(item, dict):
-                    # print(f"[DEBUG dict keys]: {list(item.keys())}") 
-                    for key in ("text", "content", "parts", "output", "response"):
-                        val = item.get(key)
-                        if isinstance(val, str) and val.strip():
-                            return val.strip()
-                        if isinstance(val, list):
-                            for part in val:
-                                if isinstance(part, dict) and part.get("text"):
-                                    return part["text"].strip()
-                                if isinstance(part, str) and part.strip():
-                                    return part.strip()
-                elif isinstance(item, str) and item.strip():
-                    return item.strip()
+            texts = [i.get("text", "") for i in content if isinstance(i, dict)]
+            text = " ".join(t for t in texts if t).strip()
+            if text:
+                return text
+        if isinstance(content, str) and content.strip():
+            # Skip if it looks like a tool-call thought with no actual answer
+            c = content.strip()
+            if len(c) > 30:   # ignore very short intermediary thoughts
+                return c
     return ""
 
 
-def run(query: str, use_cache=True, forced_category=None):
-    """Run the agent on a customer query, with optional semantic cache."""
+def extract_chunks_from_result(result: dict) -> list:
+    """
+    Walk the message list and find the ToolMessage that came from retrieve().
+    Parse the documents out of it so the UI can display the source chunks.
+    """
+    messages = result.get("messages", [])
+    for msg in messages:
+        if not isinstance(msg, ToolMessage):
+            continue
+        try:
+            payload = json.loads(msg.content)
+            docs = payload.get("documents", [])
+            if docs:
+                # Return a clean, serialisable summary of each chunk
+                clean = []
+                for d in docs[:5]:
+                    clean.append({
+                        "subject" : d.get("subject", ""),
+                        "category": d.get("category", ""),
+                        "answer"  : d.get("answer", d.get("text", ""))[:400],
+                        "score"   : round(float(d.get("score", 0)), 4),
+                        "rerank_score": round(float(d.get("rerank_score", 0)), 4),
+                        "tags"    : d.get("tags", []),
+                    })
+                return clean
+        except (json.JSONDecodeError, TypeError, AttributeError):
+            continue
+    return []
 
-    # 1. Check cache first
+
+def answer_followup(
+    previous_question: str,
+    previous_response: str,
+    followup_message: str,
+    source_chunks: list | None = None,
+) -> str:
+    """
+    Answer a clarification follow-up without re-running retrieval.
+    This keeps the reply anchored to the previous answer and source context.
+    """
+    chunk_text = ""
+    if source_chunks:
+        chunk_lines = [
+            f"- {chunk.get('answer', chunk.get('text', ''))[:300]}"
+            for chunk in source_chunks[:3]
+        ]
+        chunk_text = "\n\nSupporting source context:\n" + "\n".join(chunk_lines)
+
+    prompt = (
+        "You are helping continue an existing customer support conversation.\n\n"
+        f"Original customer question:\n{previous_question}\n\n"
+        f"Previous assistant response:\n{previous_response}\n\n"
+        f"Customer follow-up:\n{followup_message}"
+        f"{chunk_text}\n\n"
+        "Instructions:\n"
+        "1. Answer the follow-up as a clarification of the same issue.\n"
+        "2. Stay on the same topic as the original question.\n"
+        "3. Use simpler wording when the customer sounds confused.\n"
+        "4. Do not ask a new routing question unless the previous answer truly lacked enough information.\n"
+        "5. Do not introduce a different product, business scenario, or issue type.\n"
+    )
+
+    response = _llm.invoke([
+        SystemMessage(
+            content=(
+                "You are a customer support copilot. "
+                "For clarification follow-ups, explain the last answer clearly and stay grounded in the provided context."
+            )
+        ),
+        HumanMessage(content=prompt),
+    ])
+    content = getattr(response, "content", "")
+    return content.strip() if isinstance(content, str) else ""
+
+
+def run(query: str, use_cache: bool = True, forced_category: str = None) -> dict:
+    """
+    Run the full support pipeline for one customer message.
+
+    Returns a dict with:
+        messages      – raw LangGraph message list
+        cache_hit     – bool
+        cached_result – dict (only when cache_hit is True)
+        chunks        – list of source documents used (for UI display)
+    """
+    # 1. Semantic cache check
     if use_cache:
         cached = lookup(query)
         if cached:
             return {
-                "messages": [
-                    type("Msg", (), {"content": cached["final_draft"]})()
-                ],
+                "messages"     : [type("Msg", (), {"content": cached["final_draft"]})()],
                 "cache_hit"    : True,
-                "cached_result": cached
+                "cached_result": cached,
+                "chunks"       : cached.get("chunks", []),
             }
 
-    # 2. Run the full agent pipeline
+    # 2. Inject known category so classify() is skipped
+    agent_query = query
     if forced_category:
-        query = f"[KNOWN CATEGORY: {forced_category}] {query}"
-    result      = _agent.invoke({"messages": [{"role": "user", "content": query}]})
-    messages = result.get("messages", [])
-    print(f"[DEBUG] total messages: {len(messages)}")
-    for i, msg in enumerate(messages):
-        content = getattr(msg, 'content', '')
-        content_type = type(content).__name__
-        preview = str(content)[:80] if isinstance(content, str) else str(content)[:80]
-        print(f"[DEBUG] msg[{i}] type={type(msg).__name__} content_type={content_type} preview={preview}")
-    final_draft = get_final_draft(result)
+        agent_query = f"[KNOWN CATEGORY: {forced_category}] {query}"
 
-    # 3. Store in cache only if response is substantive (not a fallback)
+    result = _agent.invoke({"messages": [{"role": "user", "content": agent_query}]})
+
+    final_draft = get_final_draft(result)
+    chunks      = extract_chunks_from_result(result)
+
+    # 3. Cache only substantive responses
     fallback_phrases = [
         "unable to find relevant information",
         "escalate this to a human agent",
-        "please escalate"
+        "please escalate",
     ]
     if (use_cache
             and final_draft
             and len(final_draft.split()) > 20
             and not any(p in final_draft.lower() for p in fallback_phrases)):
-        store(query, {"final_draft": final_draft, "query": query})
+        store(query, {"final_draft": final_draft, "query": query, "chunks": chunks})
 
     result["cache_hit"] = False
+    result["chunks"]    = chunks
     return result

@@ -10,15 +10,6 @@ from src.preprocessing.text_cleaner import (
 
 MODEL_PATH = 'src/models/saved/best_classifier.pkl'
 
-URGENCY_HIGH   = [
-    'urgent', 'critical', 'emergency', 'fraud',
-    'breach', 'down', 'outage', 'immediately'
-]
-URGENCY_MEDIUM = [
-    'problem', 'issue', 'error', 'not working', 'failed', 'delay'
-]
-
-
 class SupportClassifier:
     def __init__(self, model_path: str = MODEL_PATH):
         self._model = joblib.load(model_path)
@@ -58,18 +49,8 @@ class SupportClassifier:
         proba     = self._model.predict_proba([text])[0].max()
         latency   = round((time.time() - start) * 1000, 2)
 
-        q = (body or '').lower()
-        if any(w in q for w in URGENCY_HIGH):
-            urgency = 'high'
-        elif any(w in q for w in URGENCY_MEDIUM):
-            urgency = 'medium'
-        else:
-            urgency = 'low'
-
         return {
             'category'  : pred,
             'confidence': round(float(proba), 3),
-            'urgency'   : urgency,
-            'in_scope'  : float(proba) > 0.35,
             'latency_ms': latency
         }

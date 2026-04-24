@@ -1,14 +1,26 @@
 # src/retrieval/reranker.py
 
-from sentence_transformers import CrossEncoder
 import os
+from sentence_transformers import CrossEncoder
 
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-#MODEL_PATH = os.path.join(BASE_DIR, "transformer-models", "cross-encoder-ms-marco")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+LOCAL_MODEL_ROOT = os.path.join(
+    BASE_DIR,
+    "transformer-models",
+    "models--cross-encoder--ms-marco-MiniLM-L-6-v2",
+)
 
 
-_cross = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-#_cross = CrossEncoder(MODEL_PATH)
+def _resolve_local_snapshot(model_root: str) -> str | None:
+    refs_main = os.path.join(model_root, "refs", "main")
+    if not os.path.exists(refs_main):
+        return None
+    with open(refs_main) as f:
+        snapshot = f.read().strip()
+    snapshot_path = os.path.join(model_root, "snapshots", snapshot)
+    return snapshot_path if os.path.exists(snapshot_path) else None
+
+_cross = CrossEncoder(_resolve_local_snapshot(LOCAL_MODEL_ROOT) or 'cross-encoder/ms-marco-MiniLM-L-6-v2')
 
 def rerank(query: str, documents: list, top_k: int = 5) -> list:
     if not documents:
@@ -20,4 +32,7 @@ def rerank(query: str, documents: list, top_k: int = 5) -> list:
         key=lambda x: x[1],
         reverse=True
     )
-    return [doc for doc, _ in ranked[:top_k]]
+    return [
+        {**doc, "rerank_score": float(score)}
+        for doc, score in ranked[:top_k]
+    ]

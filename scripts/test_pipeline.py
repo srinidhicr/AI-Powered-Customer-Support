@@ -88,22 +88,14 @@ def print_result(label: str, query: str, result: dict):
 
     # Extract final message from agent
     final = get_final_draft(result)
-    print("RESULT: ", result)
-    print("FINAL ", final)
 
     # Try to pretty-print if it's JSON
     try:
-        print(final)
         parsed = json.loads(final)
-        print(parsed)
-        print("CAME HEREE")
         if "clarifying_question" in parsed:
-            print("HERE")
             print(f"\n[CLARIFY] {parsed['clarifying_question']}")
             print(f"Reason: {parsed.get('reason', '')}")
-            print("done 1")
         elif "draft_response" in parsed:
-            print("OR HERE")
             print(f"\nDraft Response:")
             print(textwrap.fill(
                 parsed["draft_response"], width=66,
@@ -114,7 +106,6 @@ def print_result(label: str, query: str, result: dict):
         else:
             print(f"\nOutput:\n{json.dumps(parsed, indent=2)}")
     except (json.JSONDecodeError, TypeError):
-        print("ERRORRR")
         # Plain text output — just print it
         print(f"\nFinal Output:\n{textwrap.fill(final, width=66, initial_indent='  ', subsequent_indent='  ')}")
 

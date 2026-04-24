@@ -4,12 +4,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
 from configs.config import config
 
 _llm = ChatOpenAI(
     model=config.llm_model,
     api_key=config.openai_api_key,
-    max_tokens=100,      # rewrite is just one line
+    max_tokens=100,
     temperature=0
 )
 
@@ -46,18 +47,22 @@ def _rrf(dense_results: list, sparse_results: list, k: int = 60) -> list:
     all_docs = {d['id']: d for d in dense_results + sparse_results}
     return sorted(all_docs.values(), key=lambda d: scores[d['id']], reverse=True)
 
-@tool
+
+# ── Pydantic input schema ─────────────────────────────────────────────────────
+
+class RetrieveInput(BaseModel):
+    query: str = Field(description="The customer query text.")
+    category: str = Field(description="The predicted category from classify() tool.")
+
+
+# ── Tool ──────────────────────────────────────────────────────────────────────
+
+@tool(args_schema=RetrieveInput)
 def retrieve(query: str, category: str) -> str:
     """Retrieves relevant knowledge base documents for a customer query.
     Uses hybrid search: dense (Qdrant) + sparse (BM25) with RRF fusion and reranking.
     ALWAYS call classify() first to get the category before calling this tool.
-
-    Args:
-        query:    The customer query text.
-        category: The predicted category from classify() tool.
-
-    Returns:
-        JSON string with keys: query_rewritten, documents (list), n_retrieved
+    Returns a JSON string with keys: query_rewritten, documents (list), n_retrieved.
     """
     from src.retrieval.qdrant_store import dense_search
     from src.retrieval.bm25_store   import sparse_search

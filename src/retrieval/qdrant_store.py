@@ -11,14 +11,29 @@ from qdrant_client.models import (
 from sentence_transformers import SentenceTransformer
 from configs.config import config
 
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-# MODEL_PATH = os.path.join(BASE_DIR, "transformer-models", "all-MiniLM-L6-v2")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+LOCAL_MODEL_ROOT = os.path.join(
+    BASE_DIR,
+    "transformer-models",
+    "models--sentence-transformers--all-MiniLM-L6-v2",
+)
+
+
+def _resolve_local_snapshot(model_root: str) -> str | None:
+    refs_main = os.path.join(model_root, "refs", "main")
+    if not os.path.exists(refs_main):
+        return None
+    with open(refs_main) as f:
+        snapshot = f.read().strip()
+    snapshot_path = os.path.join(model_root, "snapshots", snapshot)
+    return snapshot_path if os.path.exists(snapshot_path) else None
 
 
 
 _client  = QdrantClient(host=config.qdrant_url, port=config.qdrant_port)
-# _encoder = SentenceTransformer(MODEL_PATH)
-_encoder = SentenceTransformer('all-MiniLM-L6-v2')   # 384-dim, fast, good
+_encoder = SentenceTransformer(
+    _resolve_local_snapshot(LOCAL_MODEL_ROOT) or 'all-MiniLM-L6-v2'
+)   # 384-dim, fast, good
 
 COLLECTION = config.collection_name
 DIM        = 384
@@ -63,7 +78,6 @@ def build_index(chunks_path: str = 'data/knowledge_base/kb_chunks.jsonl'):
 
 def dense_search(query: str, category: str, top_k: int = 20) -> list:
     vec = _encoder.encode([query], normalize_embeddings=True)[0].tolist()
-    print(f"[dense_search] filtering by category='{category}'")  # ADD THIS
 
     results = _client.query_points(
         collection_name=COLLECTION,
@@ -80,7 +94,6 @@ def dense_search(query: str, category: str, top_k: int = 20) -> list:
     )
 
     points = results.points or []
-    print(f"[dense_search] got {len(points)} results")  # ADD THIS
 
     print("\n[QDRANT RESULTS]")
     for i, hit in enumerate(points[:5]):

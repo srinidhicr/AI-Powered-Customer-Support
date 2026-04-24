@@ -13,8 +13,6 @@ class Config:
 
     # Classifier
     classifier_path: str   = "src/models/saved/best_classifier.pkl"
-    confidence_threshold: float = 0.65
-    in_scope_threshold:   float = 0.35
 
     # Qdrant
     qdrant_url:       str = os.getenv("QDRANT_URL", "localhost")

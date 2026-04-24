@@ -10,12 +10,25 @@ from qdrant_client.models import (
 from sentence_transformers import SentenceTransformer
 from configs.config import config
 
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-# MODEL_PATH = os.path.join(BASE_DIR, "transformer-models", "all-MiniLM-L6-v2")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+LOCAL_MODEL_ROOT = os.path.join(
+    BASE_DIR,
+    "transformer-models",
+    "models--sentence-transformers--all-MiniLM-L6-v2",
+)
+
+
+def _resolve_local_snapshot(model_root: str) -> str | None:
+    refs_main = os.path.join(model_root, "refs", "main")
+    if not os.path.exists(refs_main):
+        return None
+    with open(refs_main) as f:
+        snapshot = f.read().strip()
+    snapshot_path = os.path.join(model_root, "snapshots", snapshot)
+    return snapshot_path if os.path.exists(snapshot_path) else None
 
 _client  = QdrantClient(host=config.qdrant_url, port=config.qdrant_port)
-#_encoder = SentenceTransformer(MODEL_PATH)
-_encoder = SentenceTransformer('all-MiniLM-L6-v2')
+_encoder = SentenceTransformer(_resolve_local_snapshot(LOCAL_MODEL_ROOT) or 'all-MiniLM-L6-v2')
 
 CACHE_COLLECTION = "response_cache"
 DIM              = 384
@@ -69,7 +82,8 @@ def store(query: str, result: dict):
     uid = int(hashlib.md5(query.encode()).hexdigest()[:8], 16)
     safe_result = {
         "final_draft": str(result.get("final_draft", "")),
-        "query": query
+        "query": query,
+        "chunks": result.get("chunks", []),
     }
     _client.upsert(
     collection_name=CACHE_COLLECTION,

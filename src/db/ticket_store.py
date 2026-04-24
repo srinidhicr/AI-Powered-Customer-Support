@@ -26,10 +26,16 @@ def init_db():
                 ticket_id   TEXT,
                 role        TEXT,
                 content     TEXT,
+                chunks_json TEXT,
                 created_at  TEXT,
                 FOREIGN KEY (ticket_id) REFERENCES tickets(id)
             )
         """)
+        # Migration: add chunks_json if upgrading from old DB
+        try:
+            c.execute("ALTER TABLE messages ADD COLUMN chunks_json TEXT")
+        except Exception:
+            pass  # column already exists
 
 def create_ticket(ticket_id: str, category: str, summary: str):
     with _conn() as c:
@@ -57,20 +63,25 @@ def list_tickets() -> list:
     return [{"id": r[0], "category": r[1], "status": r[2],
              "created_at": r[3], "summary": r[4]} for r in rows]
 
-def add_message(ticket_id: str, role: str, content: str):
+def add_message(ticket_id: str, role: str, content: str, chunks: list = None):
+    chunks_json = json.dumps(chunks) if chunks else None
     with _conn() as c:
         c.execute(
-            "INSERT INTO messages (ticket_id, role, content, created_at) VALUES (?,?,?,?)",
-            (ticket_id, role, content, datetime.now().isoformat())
+            "INSERT INTO messages (ticket_id, role, content, chunks_json, created_at) VALUES (?,?,?,?,?)",
+            (ticket_id, role, content, chunks_json, datetime.now().isoformat())
         )
 
 def get_messages(ticket_id: str) -> list:
     with _conn() as c:
         rows = c.execute(
-            "SELECT role, content, created_at FROM messages WHERE ticket_id=? ORDER BY id",
+            "SELECT role, content, chunks_json, created_at FROM messages WHERE ticket_id=? ORDER BY id",
             (ticket_id,)
         ).fetchall()
-    return [{"role": r[0], "content": r[1], "created_at": r[2]} for r in rows]
+    result = []
+    for r in rows:
+        chunks = json.loads(r[2]) if r[2] else []
+        result.append({"role": r[0], "content": r[1], "chunks": chunks, "created_at": r[3]})
+    return result
 
 def close_ticket(ticket_id: str):
     with _conn() as c:

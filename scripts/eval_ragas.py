@@ -3,7 +3,7 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from openai import OpenAI
+from openai import AsyncOpenAI, OpenAI
 from ragas import evaluate
 from ragas.metrics.collections import (
     Faithfulness,
@@ -17,20 +17,27 @@ from src.retrieval.bm25_store   import sparse_search
 from src.retrieval.reranker     import rerank
 from src.agents.orchestrator    import run, get_final_draft
 
-# Set OpenAI key in environment — ragas 0.4.3 reads it automatically
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "")
-
-# In ragas 0.4.3, instantiate metrics with no args — they pick up env key
+# RAGAS now requires explicit client instances for LLM and OpenAI embeddings.
 from ragas.llms import llm_factory
 from ragas.embeddings import embedding_factory
 
-ragas_llm = llm_factory("gpt-4o-mini")
-ragas_embeddings = embedding_factory("text-embedding-3-small")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY is required to run scripts.eval_ragas")
+
+openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+
+ragas_llm = llm_factory("gpt-4o-mini", client=openai_client)
+ragas_embeddings = embedding_factory(
+    "openai",
+    model="text-embedding-3-small",
+    client=openai_client,
+)
 
 faithfulness      = Faithfulness(llm=ragas_llm)
 answer_relevancy  = AnswerRelevancy(llm=ragas_llm, embeddings=ragas_embeddings)
-context_precision = ContextPrecision(llm=ragas_llm)
-context_recall    = ContextRecall(llm=ragas_llm)
+context_precision = ContextPrecision(llm=ragas_llm, embeddings=ragas_embeddings)
+context_recall    = ContextRecall(llm=ragas_llm, embeddings=ragas_embeddings)
 
 def _rrf(dense, sparse, k=60):
     scores, all_docs = {}, {}
@@ -107,9 +114,10 @@ def main():
         "question"    : questions,
         "answer"      : answers,
         "contexts"    : contexts,
-        "ground_truth": ground_truths,
+        "reference": ground_truths,
     })
-
+    print(faithfulness)
+    print(type(faithfulness))
     scores = evaluate(
         dataset,
         metrics=[faithfulness, answer_relevancy, context_precision, context_recall],

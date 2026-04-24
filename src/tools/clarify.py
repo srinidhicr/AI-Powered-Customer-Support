@@ -2,20 +2,34 @@
 
 import json
 from langchain.tools import tool
+from pydantic import BaseModel, Field
+from typing import Literal
 
 
-@tool
+# ── Pydantic input schema ─────────────────────────────────────────────────────
+
+class ClarifyInput(BaseModel):
+    query: str = Field(
+        description="The original customer query."
+    )
+    reason: Literal["low_confidence", "out_of_scope", "ambiguous"] = Field(
+        description=(
+            "Why clarification is needed. Must be one of: "
+            "'low_confidence' (classifier uncertain), "
+            "'out_of_scope' (topic not supported), "
+            "'ambiguous' (query could mean multiple things)."
+        )
+    )
+
+
+# ── Tool ──────────────────────────────────────────────────────────────────────
+
+@tool(args_schema=ClarifyInput)
 def clarify(query: str, reason: str) -> str:
     """Called when a query is ambiguous, out of scope, or has low classification confidence.
     Returns a clarifying question for the support agent to present to the customer.
-    Call this INSTEAD of retrieve() when confidence < 0.65 or in_scope is False.
-
-    Args:
-        query:  The original customer query.
-        reason: One of: 'low_confidence', 'out_of_scope', 'ambiguous'
-
-    Returns:
-        JSON string with keys: clarifying_question, reason, action
+    Call this INSTEAD of retrieve() when confidence is very low or the query is out of scope.
+    Returns a JSON string with keys: clarifying_question, reason, action.
     """
     questions = {
         "low_confidence": (
@@ -38,5 +52,5 @@ def clarify(query: str, reason: str) -> str:
     return json.dumps({
         "clarifying_question": questions.get(reason, questions["ambiguous"]),
         "reason"             : reason,
-        "action"             : "present_to_agent"
+        "action"             : "present_to_agent",
     })
