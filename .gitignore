@@ -9,3 +9,4 @@ storage
 data/knowledge_base/kb_chunks_merged.jsonl
 data/knowledge_base/kb_chunks.jsonl
 data/knowledge_base/resolution_chunks.jsonl
+venv311
