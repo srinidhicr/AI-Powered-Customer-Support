@@ -90,6 +90,7 @@ An AI-powered customer support copilot built with Gradio, LangGraph, OpenAI, Qdr
 ```
 
 ## Architecture Overview
+![Query flow in architecture](report/flowcharts/Full Query Flow.png)
 
 ### 1. UI and Ticketing
 
