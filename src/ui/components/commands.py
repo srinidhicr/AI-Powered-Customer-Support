@@ -23,7 +23,7 @@ def _refresh_list():
 def handle(cmd: str, history: list, ticket_id: str | None):
     """Dispatch a slash command and return the full output tuple."""
     cmd     = cmd.strip().lower()
-    history = history + [{"role": "user", "content": cmd}]
+    history = history + [{"role": "user", "content": f"{cmd}", "metadata": {"render_markdown": False}}]
     noup    = gr.update()
 
     if cmd == "/help":

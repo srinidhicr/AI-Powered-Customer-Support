@@ -1,5 +1,6 @@
 # src/tools/retrieve.py
 import os, sys, json, time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from langchain.tools import tool
@@ -53,29 +54,53 @@ def _rrf(dense_results: list, sparse_results: list, k: int = 60) -> list:
 class RetrieveInput(BaseModel):
     query: str = Field(description="The customer query text.")
     category: str = Field(description="The predicted category from classify() tool.")
+    confidence: float = Field(
+        default=0.0,
+        description="Classifier confidence score from classify() tool. Pass this through."
+    )
 
 
 # ── Tool ──────────────────────────────────────────────────────────────────────
 
 @tool(args_schema=RetrieveInput)
-def retrieve(query: str, category: str) -> str:
+def retrieve(query: str, category: str, confidence: float = 0.0) -> str:
     """Retrieves relevant knowledge base documents for a customer query.
     Uses hybrid search: dense (Qdrant) + sparse (BM25) with RRF fusion and reranking.
-    ALWAYS call classify() first to get the category before calling this tool.
-    Returns a JSON string with keys: query_rewritten, documents (list), n_retrieved.
+    ALWAYS call classify() first to get the category and confidence before calling this tool.
+    Pass the confidence score from classify() so retrieval can skip query rewriting when not needed.
+    Returns a JSON string with keys: query_rewritten, documents (list), n_retrieved, best_rerank_score.
     """
     from src.retrieval.qdrant_store import dense_search
     from src.retrieval.bm25_store   import sparse_search
     from src.retrieval.reranker     import rerank
 
-    rewritten = _rewrite_query(query, category)
-    dense     = dense_search(rewritten, category, top_k=config.top_k_dense)
-    sparse    = sparse_search(rewritten, category, top_k=config.top_k_sparse)
-    fused     = _rrf(dense, sparse)
-    reranked  = rerank(query, fused, top_k=config.top_k_final)
+    # ── Change 2a: Skip query rewrite when classifier is confident ────────────
+    skip_rewrite = confidence >= config.skip_rewrite_confidence
+    if skip_rewrite:
+        rewritten = query
+        print(f"[Retrieve] Skipping query rewrite (confidence={confidence:.2f} >= {config.skip_rewrite_confidence})")
+    else:
+        rewritten = _rewrite_query(query, category)
+        print(f"[Retrieve] Query rewritten (confidence={confidence:.2f})")
+
+    # ── Change 2b: Parallel dense + sparse search ─────────────────────────────
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        future_dense  = executor.submit(dense_search,  rewritten, category, config.top_k_dense)
+        future_sparse = executor.submit(sparse_search, rewritten, category, config.top_k_sparse)
+        dense  = future_dense.result()
+        sparse = future_sparse.result()
+
+    fused    = _rrf(dense, sparse)
+    reranked = rerank(query, fused, top_k=config.top_k_final)
+
+    best_rerank_score = max(
+        (float(d.get("rerank_score", 0)) for d in reranked),
+        default=0.0
+    )
 
     return json.dumps({
-        "query_rewritten": rewritten,
-        "documents"      : reranked,
-        "n_retrieved"    : len(reranked)
+        "query_rewritten"  : rewritten,
+        "documents"        : reranked,
+        "n_retrieved"      : len(reranked),
+        "best_rerank_score": round(best_rerank_score, 4),
     })

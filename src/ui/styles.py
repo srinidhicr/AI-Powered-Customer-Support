@@ -85,19 +85,57 @@ body, .gradio-container {
 }
 #chatbot .message-wrap { padding: 16px 24px !important; gap: 12px !important; }
 #chatbot .user .message {
-    background: var(--ac) !important; color: #fff !important;
-    border-radius: 14px 14px 3px 14px !important; font-size: 13.5px !important;
-    display: block !important; width: fit-content !important;
-    max-width: min(68%, 720px) !important; margin-left: auto !important;
-    border: none !important; padding: 10px 14px !important;
-    white-space: pre-wrap !important; overflow-wrap: break-word !important; word-break: normal !important;
+    background: var(--ac) !important;
+    color: #fff !important;
+    border-radius: 14px 14px 3px 14px !important;
+    font-size: 13.5px !important;
+
+    display: inline-block !important;   /* ✅ change */
+    max-width: min(68%, 720px) !important;
+    min-width: 60px !important;         /* ✅ add this */
+    margin-left: auto !important;
+
+    border: none !important;
+    padding: 10px 14px !important;
+
+    white-space: pre-wrap !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
 }
+
 #chatbot .bot .message {
-    background: var(--bg2) !important; color: var(--t1) !important;
-    border: 1px solid var(--br) !important; border-radius: 14px 14px 14px 3px !important;
-    display: block !important; width: fit-content !important;
-    font-size: 13.5px !important; max-width: min(76%, 820px) !important; padding: 12px 16px !important;
-    white-space: pre-wrap !important; overflow-wrap: break-word !important; word-break: normal !important;
+    background: var(--bg2) !important;
+    color: var(--t1) !important;
+    border: 1px solid var(--br) !important;
+    border-radius: 14px 14px 14px 3px !important;
+
+    display: inline-block !important;   /* ✅ change */
+    max-width: min(76%, 820px) !important;
+    min-width: 60px !important;         /* ✅ add this */
+
+    font-size: 13.5px !important;
+    padding: 12px 16px !important;
+
+    white-space: pre-wrap !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+}
+
+#chatbot .user .message,
+#chatbot .bot .message {
+    display: inline-block !important;
+
+    /* 👇 KEY FIXES */
+    width: auto !important;          /* ensure natural sizing */
+    min-width: 80px !important;      /* bump this up from 60 */
+    max-width: 70% !important;       /* simplify (remove min()) */
+
+    white-space: normal !important;  /* 👈 THIS matters */
+    word-break: break-word !important;
+}
+#chatbot .message {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
 }
 #chatbot .bot .message p       { margin-bottom: 6px !important; line-height: 1.65 !important; }
 #chatbot .bot .message ul,

@@ -32,4 +32,8 @@ class Config:
     langsmith_api_key: str = os.getenv("LANGSMITH_API_KEY", "")
     langsmith_project: str = "customer-support-agent"
 
+    # ── NEW ──
+    skip_critique_rerank:    float = 4.0   # skip critique if best rerank score exceeds this
+    skip_rewrite_confidence: float = 0.75  # skip query rewrite if classifier confidence exceeds this
+
 config = Config()

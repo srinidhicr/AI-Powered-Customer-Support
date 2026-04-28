@@ -51,53 +51,95 @@ def ticket_info_md(ticket_id: str) -> str:
         f"{status} &nbsp;|&nbsp; `{ticket_id}`"
     )
 
-def get_prior_context(ticket_id: str, max_turns: int = 3) -> str:
+def _last_substantive_assistant_msg(ticket_id: str) -> dict | None:
     """
-    Build a compact conversation transcript from recent turns in this ticket.
-    Used to give the pipeline conversational grounding without dumping the full thread.
+    Return the most recent assistant message that was a real support answer
+    (i.e. has source chunks attached, meaning it went through retrieval).
+    Skips guardrail replies, routing notices, and out-of-scope messages.
     """
     db_msgs = get_messages(ticket_id)
-    conversation = [
-        m for m in db_msgs
-        if not (m["role"] == "assistant" and m["content"].startswith("🎫"))
-    ]
-    prior = conversation[-(max_turns * 2):-1]
-    if not prior:
-        return ""
-    lines: list[str] = []
-    for msg in prior:
-        role = "Customer" if msg["role"] == "user" else "Assistant"
-        lines.append(f"{role}: {msg['content'][:220]}")
-    return "\n\nRecent conversation:\n" + "\n".join(lines)
- 
- 
+    for m in reversed(db_msgs):
+        if m["role"] != "assistant":
+            continue
+        # Skip ticket-open banners
+        if m["content"].startswith("🎫"):
+            continue
+        # Skip messages with no chunks — these are guardrail/routing replies
+        if m.get("chunks"):
+            return m
+    return None
+
+
 def get_last_bot_reply(ticket_id: str) -> str:
     """
     Return the most recent assistant message text for a ticket.
     Used when the user sends a follow-up clarification so we can
     pass the prior answer as context instead of doing fresh retrieval.
     """
-    db_msgs = get_messages(ticket_id)
-    for m in reversed(db_msgs):
-        if m["role"] == "assistant" and not m["content"].startswith("🎫"):
-            return m["content"]
-    return ""
-
-
-def get_last_user_message(ticket_id: str) -> str:
-    """Return the most recent user message for the ticket."""
-    db_msgs = get_messages(ticket_id)
-    for m in reversed(db_msgs):
-        if m["role"] == "user":
-            return m["content"]
-    return ""
+    msg = _last_substantive_assistant_msg(ticket_id)
+    return msg["content"] if msg else ""
 
 
 def get_last_assistant_chunks(ticket_id: str) -> list:
     """Return source chunks attached to the latest assistant reply."""
+    msg = _last_substantive_assistant_msg(ticket_id)
+    return msg.get("chunks", []) if msg else []
+
+
+def get_last_user_message(ticket_id: str) -> str:
+    """
+    Return the user message that preceded the last substantive assistant reply.
+    This is the original question the support answer was about.
+    """
     db_msgs = get_messages(ticket_id)
-    for m in reversed(db_msgs):
-        if m["role"] == "assistant" and not m["content"].startswith("🎫"):
-            return m.get("chunks", []) or []
-    return []
- 
+    # Find the last substantive assistant message index
+    target_idx = None
+    for i in reversed(range(len(db_msgs))):
+        m = db_msgs[i]
+        if m["role"] == "assistant" and not m["content"].startswith("🎫") and m.get("chunks"):
+            target_idx = i
+            break
+    if target_idx is None:
+        # fallback: just return the last user message
+        for m in reversed(db_msgs):
+            if m["role"] == "user":
+                return m["content"]
+        return ""
+    # Walk backwards from that assistant message to find the user turn before it
+    for i in range(target_idx - 1, -1, -1):
+        if db_msgs[i]["role"] == "user":
+            return db_msgs[i]["content"]
+    return ""
+
+
+def get_prior_context(ticket_id: str, max_turns: int = 3) -> str:
+    """
+    Build a compact transcript using only substantive support exchanges.
+    Skips out-of-scope replies, routing notices, and guardrail messages.
+    """
+    db_msgs = get_messages(ticket_id)
+    
+    # Keep only pairs where the assistant message has chunks (real support answers)
+    # plus the user message that preceded each one
+    substantive_pairs = []
+    for i, m in enumerate(db_msgs):
+        if (m["role"] == "assistant" 
+                and not m["content"].startswith("🎫") 
+                and m.get("chunks")):
+            # find the user message before this
+            for j in range(i - 1, -1, -1):
+                if db_msgs[j]["role"] == "user":
+                    substantive_pairs.append((db_msgs[j], m))
+                    break
+
+    # Take the last max_turns substantive pairs
+    recent = substantive_pairs[-max_turns:]
+    if not recent:
+        return ""
+
+    lines = []
+    for user_msg, bot_msg in recent:
+        lines.append(f"Customer: {user_msg['content'][:220]}")
+        lines.append(f"Assistant: {bot_msg['content'][:220]}")
+
+    return "\n\nRecent conversation:\n" + "\n".join(lines)

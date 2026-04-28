@@ -16,6 +16,17 @@ from src.tools.generate import generate
 from src.tools.critique import critique
 from src.tools.clarify  import clarify
 
+from langsmith import traceable
+
+import os, sys, json
+from dotenv import load_dotenv
+load_dotenv()  # must run before langchain imports
+
+# LangSmith — enable tracing if key is present
+if os.getenv("LANGSMITH_API_KEY"):
+    os.environ.setdefault("LANGSMITH_TRACING", "true")
+    os.environ.setdefault("LANGSMITH_PROJECT", "customer-support-agent")
+
 _llm = ChatOpenAI(
     model=config.llm_model,
     api_key=config.openai_api_key,
@@ -41,13 +52,16 @@ DECISION POLICY
    - confidence < 0.25  → call retrieve(); if 0 docs → clarify(reason="low_confidence")
    - 0.25–0.65          → call retrieve(); continue with generate(); use critique() carefully
    - >= 0.65            → call retrieve() normally
+   Always pass the confidence value to retrieve().
 
 4. After retrieve():
    → If no documents found → call clarify(reason="ambiguous") and STOP.
    → Otherwise call generate()
 
 5. After generate():
-   → Call critique()
+   → Check best_rerank_score from the retrieve() result.
+   → If best_rerank_score >= {config.skip_critique_rerank}: SKIP critique() and go directly to step 7.
+   → Otherwise call critique()
 
 6. If critique.should_retry == true AND retry_count < {config.max_retries}:
    → Retry retrieve() → generate() → critique()
@@ -123,9 +137,9 @@ def extract_chunks_from_result(result: dict) -> list:
             continue
     return []
 
-
-def answer_followup( previous_question: str, previous_response: str,
-    followup_message: str, source_chunks: list | None = None) -> str:
+@traceable(name="answer_followup", run_type="llm")
+def answer_followup(previous_question: str, previous_response: str,
+                    followup_message: str, source_chunks: list | None = None) -> str:
     """
     Answer a clarification follow-up without re-running retrieval.
     This keeps the reply anchored to the previous answer and source context.
@@ -195,7 +209,18 @@ def run(query: str, use_cache: bool = True, forced_category: str = None) -> dict
     if forced_category:
         agent_query = f"[KNOWN CATEGORY: {forced_category}] {query}"
 
-    result = _agent.invoke({"messages": [{"role": "user", "content": agent_query}]})
+    result = _agent.invoke(
+        {"messages": [{"role": "user", "content": agent_query}]},
+        config={
+            "run_name": "support_pipeline",
+            "metadata": {
+                "category": forced_category or "unknown",
+                "cache_enabled": use_cache,
+                "query_length": len(query.split()),
+            },
+            "tags": ["production", forced_category or "unclassified"],
+        }
+    )
 
     final_draft = get_final_draft(result)
     chunks      = extract_chunks_from_result(result)
