@@ -1,7 +1,7 @@
 .env
 venv/
 .qdrant-initialized
-qdrant.exe
+qdrant
 qdrant.tar.gz
 data/tickets.db
 /transformer-models
