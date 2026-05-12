@@ -1,0 +1,1524 @@
+
+
+============================================================
+SESSION: 2026-04-13 08:28:15
+============================================================
+
+Requirement already satisfied: pandas in /usr/local/lib/python3.12/dist-packages (2.2.2)
+Requirement already satisfied: numpy>=1.26.0 in /usr/local/lib/python3.12/dist-packages (from pandas) (2.0.2)
+Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.12/dist-packages (from pandas) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas) (2025.3)
+Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)
+Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount("/content/drive", force_remount=True).
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 28587 entries, 0 to 28586
+Data columns (total 16 columns):
+ #   Column    Non-Null Count  Dtype 
+---  ------    --------------  ----- 
+ 0   subject   24749 non-null  object
+ 1   body      28587 non-null  object
+ 2   answer    28580 non-null  object
+ 3   type      28587 non-null  object
+ 4   queue     28587 non-null  object
+ 5   priority  28587 non-null  object
+ 6   language  28587 non-null  object
+ 7   version   28587 non-null  int64 
+ 8   tag_1     28587 non-null  object
+ 9   tag_2     28574 non-null  object
+ 10  tag_3     28451 non-null  object
+ 11  tag_4     25529 non-null  object
+ 12  tag_5     14545 non-null  object
+ 13  tag_6     5874 non-null   object
+ 14  tag_7     2040 non-null   object
+ 15  tag_8     565 non-null    object
+dtypes: int64(1), object(15)
+memory usage: 3.5+ MB
+Null values:  body           0
+subject     2607
+category       0
+dtype: int64
+
+Unique categories:  ['Technical Support' 'Returns and Exchanges' 'Billing and Payments'
+ 'Sales and Pre-Sales' 'Service Outages and Maintenance' 'Product Support'
+ 'IT Support' 'Customer Service' 'Human Resources' 'General Inquiry']
+
+Category counts:  category
+Technical Support                  4737
+Product Support                    3073
+Customer Service                   2410
+IT Support                         1942
+Billing and Payments               1595
+Returns and Exchanges               820
+Service Outages and Maintenance     664
+Sales and Pre-Sales                 513
+Human Resources                     348
+General Inquiry                     236
+Name: count, dtype: int64
+
+Duplicate queries:  0
+
+Sample cleaned text:
+Account Disruption - report a significant problem with the centralized account management portal which currently appears to be offline this outage is blocking access to account settings leading to substantial inconvenience i have attempted to log in multiple times using different browsers and devices but the issue persists could you please provide an update on the outage status and an estimated time for resolution also are there any alternative ways to access and manage my account during this downtime
+                                 count  proportion  imbalance_ratio
+category                                                           
+Technical Support                 4737      0.2899             1.00
+Product Support                   3073      0.1881             1.54
+Customer Service                  2410      0.1475             1.97
+IT Support                        1942      0.1189             2.44
+Billing and Payments              1595      0.0976             2.97
+Returns and Exchanges              820      0.0502             5.78
+Service Outages and Maintenance    664      0.0406             7.13
+Sales and Pre-Sales                513      0.0314             9.23
+Human Resources                    348      0.0213            13.61
+General Inquiry                    236      0.0144            20.07
+
+Overall imbalance ratio (max/min): 20.07
+count    16338.000000
+mean        58.524972
+std         25.856517
+min          3.000000
+25%         37.000000
+50%         61.000000
+75%         81.000000
+max        172.000000
+Name: text_len, dtype: float64
+Min query length:  3
+Max query length:  172
+Queries < 10 words:  118
+Queries < 5 words:  2
+                                                    body  \
+995                                    Assistance Needed   
+2944                            Problems with the server   
+3365                       Several products are impacted   
+3832                      Several products are impacted.   
+5974                                  Hello support team   
+9499                        Seek assistance with billing   
+9701                     Seeking assistance with billing   
+11338                   Issues with software integration   
+14648  Thecompanyisincapableofaccessinginvestmentanal...   
+14678                 Problems with software integration   
+
+                                         subject              category  \
+995                            Issue Encountered     Technical Support   
+2944                                         NaN       General Inquiry   
+3365                                         NaN     Technical Support   
+3832                                         NaN     Technical Support   
+5974                                         NaN      Customer Service   
+9499                                         NaN  Billing and Payments   
+9701                                         NaN  Billing and Payments   
+11338                                        NaN     Technical Support   
+14648  ConcernregardingSystemInvestmentAnalytics     Technical Support   
+14678                                        NaN     Technical Support   
+
+                                              body_clean  \
+995                                    assistance needed   
+2944                            problems with the server   
+3365                       several products are impacted   
+3832                       several products are impacted   
+5974                                  hello support team   
+9499                        seek assistance with billing   
+9701                     seeking assistance with billing   
+11338                   issues with software integration   
+14648  thecompanyisincapableofaccessinginvestmentanal...   
+14678                 problems with software integration   
+
+                                                    text  text_len  
+995                Issue Encountered - assistance needed         5  
+2944                          - problems with the server         5  
+3365                     - several products are impacted         5  
+3832                     - several products are impacted         5  
+5974                                - hello support team         4  
+9499                      - seek assistance with billing         5  
+9701                   - seeking assistance with billing         5  
+11338                 - issues with software integration         5  
+14648  ConcernregardingSystemInvestmentAnalytics - th...         3  
+14678               - problems with software integration         5  
+Top terms BEFORE cleaning:
+['data', 'issue', 'software', 'security', 'information', 'provide', 'assistance', 'support', 'analytics', 'investment', 'appreciate', 'medical', 'customer', 'integration', 'digital']
+
+Top terms AFTER cleaning:
+['data', 'security', 'issue', 'software', 'analytics', 'medical', 'digital', 'investment', 'assistance', 'integration', 'information', 'problem', 'marketing', 'provide', 'tools']
+
+============================================================
+SESSION: 2026-04-13 08:45:54
+============================================================
+
+Requirement already satisfied: pandas in /usr/local/lib/python3.12/dist-packages (2.2.2)
+Requirement already satisfied: pandas in /usr/local/lib/python3.12/dist-packages (2.2.2)
+Requirement already satisfied: numpy>=1.26.0 in /usr/local/lib/python3.12/dist-packages (from pandas) (2.0.2)
+Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.12/dist-packages (from pandas) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas) (2025.3)
+Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)
+Requirement already satisfied: numpy>=1.26.0 in /usr/local/lib/python3.12/dist-packages (from pandas) (2.0.2)
+Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.12/dist-packages (from pandas) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas) (2025.3)
+Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)
+Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount("/content/drive", force_remount=True).Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount("/content/drive", force_remount=True).
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 28587 entries, 0 to 28586
+Data columns (total 16 columns):
+ #   Column    Non-Null Count  Dtype 
+---  ------    --------------  ----- 
+ 0   subject   24749 non-null  object
+ 1   body      28587 non-null  object
+ 2   answer    28580 non-null  object
+ 3   type      28587 non-null  object
+ 4   queue     28587 non-null  object
+ 5   priority  28587 non-null  object
+ 6   language  28587 non-null  object
+ 7   version   28587 non-null  int64 
+ 8   tag_1     28587 non-null  object
+ 9   tag_2     28574 non-null  object
+ 10  tag_3     28451 non-null  object
+ 11  tag_4     25529 non-null  object
+ 12  tag_5     14545 non-null  object
+ 13  tag_6     5874 non-null   object
+ 14  tag_7     2040 non-null   object
+ 15  tag_8     565 non-null    object
+dtypes: int64(1), object(15)
+memory usage: 3.5+ MB
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 28587 entries, 0 to 28586
+Data columns (total 16 columns):
+ #   Column    Non-Null Count  Dtype 
+---  ------    --------------  ----- 
+ 0   subject   24749 non-null  object
+ 1   body      28587 non-null  object
+ 2   answer    28580 non-null  object
+ 3   type      28587 non-null  object
+ 4   queue     28587 non-null  object
+ 5   priority  28587 non-null  object
+ 6   language  28587 non-null  object
+ 7   version   28587 non-null  int64 
+ 8   tag_1     28587 non-null  object
+ 9   tag_2     28574 non-null  object
+ 10  tag_3     28451 non-null  object
+ 11  tag_4     25529 non-null  object
+ 12  tag_5     14545 non-null  object
+ 13  tag_6     5874 non-null   object
+ 14  tag_7     2040 non-null   object
+ 15  tag_8     565 non-null    object
+dtypes: int64(1), object(15)
+memory usage: 3.5+ MB
+Null values: Null values:   body           0
+subject     2607
+category       0
+dtype: int64body           0
+subject     2607
+category       0
+dtype: int64
+
+
+Unique categories: 
+Unique categories:   ['Technical Support' 'Returns and Exchanges' 'Billing and Payments'
+ 'Sales and Pre-Sales' 'Service Outages and Maintenance' 'Product Support'
+ 'IT Support' 'Customer Service' 'Human Resources' 'General Inquiry']['Technical Support' 'Returns and Exchanges' 'Billing and Payments'
+ 'Sales and Pre-Sales' 'Service Outages and Maintenance' 'Product Support'
+ 'IT Support' 'Customer Service' 'Human Resources' 'General Inquiry']
+
+
+Category counts: 
+Category counts:   category
+Technical Support                  4737
+Product Support                    3073
+Customer Service                   2410
+IT Support                         1942
+Billing and Payments               1595
+Returns and Exchanges               820
+Service Outages and Maintenance     664
+Sales and Pre-Sales                 513
+Human Resources                     348
+General Inquiry                     236
+Name: count, dtype: int64category
+Technical Support                  4737
+Product Support                    3073
+Customer Service                   2410
+IT Support                         1942
+Billing and Payments               1595
+Returns and Exchanges               820
+Service Outages and Maintenance     664
+Sales and Pre-Sales                 513
+Human Resources                     348
+General Inquiry                     236
+Name: count, dtype: int64
+
+
+Duplicate queries: 
+Duplicate queries:   00
+
+
+Sample cleaned text:
+Account Disruption - report a significant problem with the centralized account management portal which currently appears to be offline this outage is blocking access to account settings leading to substantial inconvenience i have attempted to log in multiple times using different browsers and devices but the issue persists could you please provide an update on the outage status and an estimated time for resolution also are there any alternative ways to access and manage my account during this downtime
+Sample cleaned text:
+Account Disruption - report a significant problem with the centralized account management portal which currently appears to be offline this outage is blocking access to account settings leading to substantial inconvenience i have attempted to log in multiple times using different browsers and devices but the issue persists could you please provide an update on the outage status and an estimated time for resolution also are there any alternative ways to access and manage my account during this downtime
+
+                                 count  proportion  imbalance_ratio
+category                                                           
+Technical Support                 4737      0.2899             1.00
+Product Support                   3073      0.1881             1.54
+Customer Service                  2410      0.1475             1.97
+IT Support                        1942      0.1189             2.44
+Billing and Payments              1595      0.0976             2.97
+Returns and Exchanges              820      0.0502             5.78
+Service Outages and Maintenance    664      0.0406             7.13
+Sales and Pre-Sales                513      0.0314             9.23
+Human Resources                    348      0.0213            13.61
+General Inquiry                    236      0.0144            20.07                                 count  proportion  imbalance_ratio
+category                                                           
+Technical Support                 4737      0.2899             1.00
+Product Support                   3073      0.1881             1.54
+Customer Service                  2410      0.1475             1.97
+IT Support                        1942      0.1189             2.44
+Billing and Payments              1595      0.0976             2.97
+Returns and Exchanges              820      0.0502             5.78
+Service Outages and Maintenance    664      0.0406             7.13
+Sales and Pre-Sales                513      0.0314             9.23
+Human Resources                    348      0.0213            13.61
+General Inquiry                    236      0.0144            20.07
+
+
+Overall imbalance ratio (max/min): 20.07
+Overall imbalance ratio (max/min): 20.07
+
+count    16338.000000
+mean        58.524972
+std         25.856517
+min          3.000000
+25%         37.000000
+50%         61.000000
+75%         81.000000
+max        172.000000
+Name: text_len, dtype: float64count    16338.000000
+mean        58.524972
+std         25.856517
+min          3.000000
+25%         37.000000
+50%         61.000000
+75%         81.000000
+max        172.000000
+Name: text_len, dtype: float64
+
+Min query length: Min query length:   33
+
+Max query length: Max query length:   172172
+
+Queries < 10 words: Queries < 10 words:   118118
+
+Queries < 5 words: Queries < 5 words:   22
+
+                                                    body  \
+995                                    Assistance Needed   
+2944                            Problems with the server   
+3365                       Several products are impacted   
+3832                      Several products are impacted.   
+5974                                  Hello support team   
+9499                        Seek assistance with billing   
+9701                     Seeking assistance with billing   
+11338                   Issues with software integration   
+14648  Thecompanyisincapableofaccessinginvestmentanal...   
+14678                 Problems with software integration   
+
+                                         subject              category  \
+995                            Issue Encountered     Technical Support   
+2944                                         NaN       General Inquiry   
+3365                                         NaN     Technical Support   
+3832                                         NaN     Technical Support   
+5974                                         NaN      Customer Service   
+9499                                         NaN  Billing and Payments   
+9701                                         NaN  Billing and Payments   
+11338                                        NaN     Technical Support   
+14648  ConcernregardingSystemInvestmentAnalytics     Technical Support   
+14678                                        NaN     Technical Support   
+
+                                              body_clean  \
+995                                    assistance needed   
+2944                            problems with the server   
+3365                       several products are impacted   
+3832                       several products are impacted   
+5974                                  hello support team   
+9499                        seek assistance with billing   
+9701                     seeking assistance with billing   
+11338                   issues with software integration   
+14648  thecompanyisincapableofaccessinginvestmentanal...   
+14678                 problems with software integration   
+
+                                                    text  text_len  
+995                Issue Encountered - assistance needed         5  
+2944                          - problems with the server         5  
+3365                     - several products are impacted         5  
+3832                     - several products are impacted         5  
+5974                                - hello support team         4  
+9499                      - seek assistance with billing         5  
+9701                   - seeking assistance with billing         5  
+11338                 - issues with software integration         5  
+14648  ConcernregardingSystemInvestmentAnalytics - th...         3  
+14678               - problems with software integration         5                                                      body  \
+995                                    Assistance Needed   
+2944                            Problems with the server   
+3365                       Several products are impacted   
+3832                      Several products are impacted.   
+5974                                  Hello support team   
+9499                        Seek assistance with billing   
+9701                     Seeking assistance with billing   
+11338                   Issues with software integration   
+14648  Thecompanyisincapableofaccessinginvestmentanal...   
+14678                 Problems with software integration   
+
+                                         subject              category  \
+995                            Issue Encountered     Technical Support   
+2944                                         NaN       General Inquiry   
+3365                                         NaN     Technical Support   
+3832                                         NaN     Technical Support   
+5974                                         NaN      Customer Service   
+9499                                         NaN  Billing and Payments   
+9701                                         NaN  Billing and Payments   
+11338                                        NaN     Technical Support   
+14648  ConcernregardingSystemInvestmentAnalytics     Technical Support   
+14678                                        NaN     Technical Support   
+
+                                              body_clean  \
+995                                    assistance needed   
+2944                            problems with the server   
+3365                       several products are impacted   
+3832                       several products are impacted   
+5974                                  hello support team   
+9499                        seek assistance with billing   
+9701                     seeking assistance with billing   
+11338                   issues with software integration   
+14648  thecompanyisincapableofaccessinginvestmentanal...   
+14678                 problems with software integration   
+
+                                                    text  text_len  
+995                Issue Encountered - assistance needed         5  
+2944                          - problems with the server         5  
+3365                     - several products are impacted         5  
+3832                     - several products are impacted         5  
+5974                                - hello support team         4  
+9499                      - seek assistance with billing         5  
+9701                   - seeking assistance with billing         5  
+11338                 - issues with software integration         5  
+14648  ConcernregardingSystemInvestmentAnalytics - th...         3  
+14678               - problems with software integration         5  
+
+Top terms BEFORE cleaning:Top terms BEFORE cleaning:
+
+['data', 'issue', 'software', 'security', 'information', 'provide', 'assistance', 'support', 'analytics', 'investment', 'appreciate', 'medical', 'customer', 'integration', 'digital']['data', 'issue', 'software', 'security', 'information', 'provide', 'assistance', 'support', 'analytics', 'investment', 'appreciate', 'medical', 'customer', 'integration', 'digital']
+
+
+Top terms AFTER cleaning:
+Top terms AFTER cleaning:
+
+['data', 'security', 'issue', 'software', 'analytics', 'medical', 'digital', 'investment', 'assistance', 'integration', 'information', 'problem', 'marketing', 'provide', 'tools']['data', 'security', 'issue', 'software', 'analytics', 'medical', 'digital', 'investment', 'assistance', 'integration', 'information', 'problem', 'marketing', 'provide', 'tools']
+
+
+============================================================
+SESSION: 2026-04-13 08:46:49
+============================================================
+
+Train: 12921 | Test: 3231Train: 12921 | Test: 3231Train: 12921 | Test: 3231
+
+
+
+Train class distribution:
+category
+Technical Support                  3747
+Product Support                    2432
+Customer Service                   1906
+IT Support                         1534
+Billing and Payments               1262
+Returns and Exchanges               652
+Service Outages and Maintenance     522
+Sales and Pre-Sales                 402
+Human Resources                     278
+General Inquiry                     186
+Name: count, dtype: int64
+Train class distribution:
+category
+Technical Support                  3747
+Product Support                    2432
+Customer Service                   1906
+IT Support                         1534
+Billing and Payments               1262
+Returns and Exchanges               652
+Service Outages and Maintenance     522
+Sales and Pre-Sales                 402
+Human Resources                     278
+General Inquiry                     186
+Name: count, dtype: int64
+Train class distribution:
+category
+Technical Support                  3747
+Product Support                    2432
+Customer Service                   1906
+IT Support                         1534
+Billing and Payments               1262
+Returns and Exchanges               652
+Service Outages and Maintenance     522
+Sales and Pre-Sales                 402
+Human Resources                     278
+General Inquiry                     186
+Name: count, dtype: int64
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: LR — no balancingModel: LR — no balancingModel: LR — no balancing
+
+
+CV Macro F1 (5-fold): 0.3793 ± 0.0087CV Macro F1 (5-fold): 0.3793 ± 0.0087CV Macro F1 (5-fold): 0.3793 ± 0.0087
+
+
+
+Test Accuracy: 0.5522
+Test Accuracy: 0.5522
+Test Accuracy: 0.5522
+
+
+Test Macro F1: 0.4093Test Macro F1: 0.4093Test Macro F1: 0.4093
+
+
+Train time: 22.87sTrain time: 22.87sTrain time: 22.87s
+
+
+Inference time: 0.1042ms/sampleInference time: 0.1042ms/sampleInference time: 0.1042ms/sample
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.71      0.82       316
+               Customer Service       0.47      0.48      0.47       477
+                General Inquiry       1.00      0.04      0.08        47
+                Human Resources       1.00      0.01      0.03        69
+                     IT Support       0.76      0.31      0.44       384
+                Product Support       0.53      0.51      0.52       608
+          Returns and Exchanges       0.92      0.15      0.25       163
+            Sales and Pre-Sales       0.93      0.14      0.24       100
+Service Outages and Maintenance       0.90      0.48      0.62       130
+              Technical Support       0.48      0.86      0.62       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.80      0.37      0.41      3231
+                   weighted avg       0.64      0.55      0.53      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.71      0.82       316
+               Customer Service       0.47      0.48      0.47       477
+                General Inquiry       1.00      0.04      0.08        47
+                Human Resources       1.00      0.01      0.03        69
+                     IT Support       0.76      0.31      0.44       384
+                Product Support       0.53      0.51      0.52       608
+          Returns and Exchanges       0.92      0.15      0.25       163
+            Sales and Pre-Sales       0.93      0.14      0.24       100
+Service Outages and Maintenance       0.90      0.48      0.62       130
+              Technical Support       0.48      0.86      0.62       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.80      0.37      0.41      3231
+                   weighted avg       0.64      0.55      0.53      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.71      0.82       316
+               Customer Service       0.47      0.48      0.47       477
+                General Inquiry       1.00      0.04      0.08        47
+                Human Resources       1.00      0.01      0.03        69
+                     IT Support       0.76      0.31      0.44       384
+                Product Support       0.53      0.51      0.52       608
+          Returns and Exchanges       0.92      0.15      0.25       163
+            Sales and Pre-Sales       0.93      0.14      0.24       100
+Service Outages and Maintenance       0.90      0.48      0.62       130
+              Technical Support       0.48      0.86      0.62       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.80      0.37      0.41      3231
+                   weighted avg       0.64      0.55      0.53      3231
+
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: LR — class weightedModel: LR — class weightedModel: LR — class weighted
+
+
+CV Macro F1 (5-fold): 0.5216 ± 0.0180CV Macro F1 (5-fold): 0.5216 ± 0.0180CV Macro F1 (5-fold): 0.5216 ± 0.0180
+
+
+
+Test Accuracy: 0.5469
+Test Accuracy: 0.5469
+Test Accuracy: 0.5469
+
+
+Test Macro F1: 0.5605Test Macro F1: 0.5605Test Macro F1: 0.5605
+
+
+Train time: 17.33sTrain time: 17.33sTrain time: 17.33s
+
+
+Inference time: 0.1485ms/sampleInference time: 0.1485ms/sampleInference time: 0.1485ms/sample
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.83      0.77      0.80       316
+               Customer Service       0.44      0.48      0.46       477
+                General Inquiry       0.43      0.60      0.50        47
+                Human Resources       0.49      0.70      0.57        69
+                     IT Support       0.46      0.53      0.49       384
+                Product Support       0.54      0.43      0.48       608
+          Returns and Exchanges       0.50      0.59      0.54       163
+            Sales and Pre-Sales       0.38      0.67      0.48       100
+Service Outages and Maintenance       0.62      0.85      0.71       130
+              Technical Support       0.61      0.51      0.56       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.53      0.61      0.56      3231
+                   weighted avg       0.56      0.55      0.55      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.83      0.77      0.80       316
+               Customer Service       0.44      0.48      0.46       477
+                General Inquiry       0.43      0.60      0.50        47
+                Human Resources       0.49      0.70      0.57        69
+                     IT Support       0.46      0.53      0.49       384
+                Product Support       0.54      0.43      0.48       608
+          Returns and Exchanges       0.50      0.59      0.54       163
+            Sales and Pre-Sales       0.38      0.67      0.48       100
+Service Outages and Maintenance       0.62      0.85      0.71       130
+              Technical Support       0.61      0.51      0.56       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.53      0.61      0.56      3231
+                   weighted avg       0.56      0.55      0.55      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.83      0.77      0.80       316
+               Customer Service       0.44      0.48      0.46       477
+                General Inquiry       0.43      0.60      0.50        47
+                Human Resources       0.49      0.70      0.57        69
+                     IT Support       0.46      0.53      0.49       384
+                Product Support       0.54      0.43      0.48       608
+          Returns and Exchanges       0.50      0.59      0.54       163
+            Sales and Pre-Sales       0.38      0.67      0.48       100
+Service Outages and Maintenance       0.62      0.85      0.71       130
+              Technical Support       0.61      0.51      0.56       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.53      0.61      0.56      3231
+                   weighted avg       0.56      0.55      0.55      3231
+
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: RF — no balancingModel: RF — no balancingModel: RF — no balancing
+
+
+CV Macro F1 (5-fold): 0.6062 ± 0.0147CV Macro F1 (5-fold): 0.6062 ± 0.0147CV Macro F1 (5-fold): 0.6062 ± 0.0147
+
+
+
+Test Accuracy: 0.6775
+Test Accuracy: 0.6775
+Test Accuracy: 0.6775
+
+
+Test Macro F1: 0.6603Test Macro F1: 0.6603Test Macro F1: 0.6603
+
+
+Train time: 95.16sTrain time: 95.16sTrain time: 95.16s
+
+
+Inference time: 0.2252ms/sampleInference time: 0.2252ms/sampleInference time: 0.2252ms/sample
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.95      0.80      0.87       316
+               Customer Service       0.62      0.63      0.62       477
+                General Inquiry       1.00      0.36      0.53        47
+                Human Resources       0.97      0.52      0.68        69
+                     IT Support       0.93      0.43      0.59       384
+                Product Support       0.77      0.57      0.65       608
+          Returns and Exchanges       0.94      0.50      0.66       163
+            Sales and Pre-Sales       1.00      0.37      0.54       100
+Service Outages and Maintenance       0.92      0.66      0.77       130
+              Technical Support       0.55      0.93      0.69       937
+
+                       accuracy                           0.68      3231
+                      macro avg       0.87      0.58      0.66      3231
+                   weighted avg       0.75      0.68      0.67      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.95      0.80      0.87       316
+               Customer Service       0.62      0.63      0.62       477
+                General Inquiry       1.00      0.36      0.53        47
+                Human Resources       0.97      0.52      0.68        69
+                     IT Support       0.93      0.43      0.59       384
+                Product Support       0.77      0.57      0.65       608
+          Returns and Exchanges       0.94      0.50      0.66       163
+            Sales and Pre-Sales       1.00      0.37      0.54       100
+Service Outages and Maintenance       0.92      0.66      0.77       130
+              Technical Support       0.55      0.93      0.69       937
+
+                       accuracy                           0.68      3231
+                      macro avg       0.87      0.58      0.66      3231
+                   weighted avg       0.75      0.68      0.67      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.95      0.80      0.87       316
+               Customer Service       0.62      0.63      0.62       477
+                General Inquiry       1.00      0.36      0.53        47
+                Human Resources       0.97      0.52      0.68        69
+                     IT Support       0.93      0.43      0.59       384
+                Product Support       0.77      0.57      0.65       608
+          Returns and Exchanges       0.94      0.50      0.66       163
+            Sales and Pre-Sales       1.00      0.37      0.54       100
+Service Outages and Maintenance       0.92      0.66      0.77       130
+              Technical Support       0.55      0.93      0.69       937
+
+                       accuracy                           0.68      3231
+                      macro avg       0.87      0.58      0.66      3231
+                   weighted avg       0.75      0.68      0.67      3231
+
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: RF — class weightedModel: RF — class weightedModel: RF — class weighted
+
+
+CV Macro F1 (5-fold): 0.6400 ± 0.0133CV Macro F1 (5-fold): 0.6400 ± 0.0133CV Macro F1 (5-fold): 0.6400 ± 0.0133
+
+
+
+Test Accuracy: 0.6939
+Test Accuracy: 0.6939
+Test Accuracy: 0.6939
+
+
+Test Macro F1: 0.686Test Macro F1: 0.686Test Macro F1: 0.686
+
+
+Train time: 113.92sTrain time: 113.92sTrain time: 113.92s
+
+
+Inference time: 0.2617ms/sampleInference time: 0.2617ms/sampleInference time: 0.2617ms/sample
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.97      0.78      0.87       316
+               Customer Service       0.63      0.66      0.64       477
+                General Inquiry       1.00      0.40      0.58        47
+                Human Resources       1.00      0.57      0.72        69
+                     IT Support       0.93      0.45      0.60       384
+                Product Support       0.80      0.60      0.68       608
+          Returns and Exchanges       0.96      0.53      0.68       163
+            Sales and Pre-Sales       1.00      0.42      0.59       100
+Service Outages and Maintenance       0.90      0.72      0.80       130
+              Technical Support       0.56      0.93      0.70       937
+
+                       accuracy                           0.69      3231
+                      macro avg       0.87      0.60      0.69      3231
+                   weighted avg       0.76      0.69      0.69      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.97      0.78      0.87       316
+               Customer Service       0.63      0.66      0.64       477
+                General Inquiry       1.00      0.40      0.58        47
+                Human Resources       1.00      0.57      0.72        69
+                     IT Support       0.93      0.45      0.60       384
+                Product Support       0.80      0.60      0.68       608
+          Returns and Exchanges       0.96      0.53      0.68       163
+            Sales and Pre-Sales       1.00      0.42      0.59       100
+Service Outages and Maintenance       0.90      0.72      0.80       130
+              Technical Support       0.56      0.93      0.70       937
+
+                       accuracy                           0.69      3231
+                      macro avg       0.87      0.60      0.69      3231
+                   weighted avg       0.76      0.69      0.69      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.97      0.78      0.87       316
+               Customer Service       0.63      0.66      0.64       477
+                General Inquiry       1.00      0.40      0.58        47
+                Human Resources       1.00      0.57      0.72        69
+                     IT Support       0.93      0.45      0.60       384
+                Product Support       0.80      0.60      0.68       608
+          Returns and Exchanges       0.96      0.53      0.68       163
+            Sales and Pre-Sales       1.00      0.42      0.59       100
+Service Outages and Maintenance       0.90      0.72      0.80       130
+              Technical Support       0.56      0.93      0.70       937
+
+                       accuracy                           0.69      3231
+                      macro avg       0.87      0.60      0.69      3231
+                   weighted avg       0.76      0.69      0.69      3231
+
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: LinearSVM — tunedModel: LinearSVM — tunedModel: LinearSVM — tuned
+
+
+CV Macro F1 (5-fold): 0.6615 ± 0.0150CV Macro F1 (5-fold): 0.6615 ± 0.0150CV Macro F1 (5-fold): 0.6615 ± 0.0150
+
+
+
+Test Accuracy: 0.7004
+Test Accuracy: 0.7004
+Test Accuracy: 0.7004
+
+
+Test Macro F1: 0.7101Test Macro F1: 0.7101Test Macro F1: 0.7101
+
+
+Train time: 3.43sTrain time: 3.43sTrain time: 3.43s
+
+
+Inference time: 0.0846ms/sampleInference time: 0.0846ms/sampleInference time: 0.0846ms/sample
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.88      0.84      0.86       316
+               Customer Service       0.62      0.66      0.64       477
+                General Inquiry       0.73      0.64      0.68        47
+                Human Resources       0.71      0.74      0.72        69
+                     IT Support       0.63      0.65      0.64       384
+                Product Support       0.67      0.64      0.66       608
+          Returns and Exchanges       0.72      0.69      0.71       163
+            Sales and Pre-Sales       0.67      0.63      0.65       100
+Service Outages and Maintenance       0.81      0.84      0.82       130
+              Technical Support       0.71      0.72      0.72       937
+
+                       accuracy                           0.70      3231
+                      macro avg       0.72      0.71      0.71      3231
+                   weighted avg       0.70      0.70      0.70      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.88      0.84      0.86       316
+               Customer Service       0.62      0.66      0.64       477
+                General Inquiry       0.73      0.64      0.68        47
+                Human Resources       0.71      0.74      0.72        69
+                     IT Support       0.63      0.65      0.64       384
+                Product Support       0.67      0.64      0.66       608
+          Returns and Exchanges       0.72      0.69      0.71       163
+            Sales and Pre-Sales       0.67      0.63      0.65       100
+Service Outages and Maintenance       0.81      0.84      0.82       130
+              Technical Support       0.71      0.72      0.72       937
+
+                       accuracy                           0.70      3231
+                      macro avg       0.72      0.71      0.71      3231
+                   weighted avg       0.70      0.70      0.70      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.88      0.84      0.86       316
+               Customer Service       0.62      0.66      0.64       477
+                General Inquiry       0.73      0.64      0.68        47
+                Human Resources       0.71      0.74      0.72        69
+                     IT Support       0.63      0.65      0.64       384
+                Product Support       0.67      0.64      0.66       608
+          Returns and Exchanges       0.72      0.69      0.71       163
+            Sales and Pre-Sales       0.67      0.63      0.65       100
+Service Outages and Maintenance       0.81      0.84      0.82       130
+              Technical Support       0.71      0.72      0.72       937
+
+                       accuracy                           0.70      3231
+                      macro avg       0.72      0.71      0.71      3231
+                   weighted avg       0.70      0.70      0.70      3231
+
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: MultinomialNB — tunedModel: MultinomialNB — tunedModel: MultinomialNB — tuned
+
+
+CV Macro F1 (5-fold): 0.2334 ± 0.0063CV Macro F1 (5-fold): 0.2334 ± 0.0063CV Macro F1 (5-fold): 0.2334 ± 0.0063
+
+
+
+Test Accuracy: 0.4383
+Test Accuracy: 0.4383
+Test Accuracy: 0.4383
+
+
+Test Macro F1: 0.2368Test Macro F1: 0.2368Test Macro F1: 0.2368
+
+
+Train time: 2.48sTrain time: 2.48sTrain time: 2.48s
+
+
+Inference time: 0.1433ms/sampleInference time: 0.1433ms/sampleInference time: 0.1433ms/sample
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.61      0.74       316
+               Customer Service       0.31      0.43      0.36       477
+                General Inquiry       1.00      0.02      0.04        47
+                Human Resources       0.00      0.00      0.00        69
+                     IT Support       0.89      0.07      0.12       384
+                Product Support       0.43      0.32      0.36       608
+          Returns and Exchanges       1.00      0.03      0.06       163
+            Sales and Pre-Sales       0.00      0.00      0.00       100
+Service Outages and Maintenance       0.89      0.06      0.12       130
+              Technical Support       0.42      0.84      0.56       937
+
+                       accuracy                           0.44      3231
+                      macro avg       0.59      0.24      0.24      3231
+                   weighted avg       0.55      0.44      0.38      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.61      0.74       316
+               Customer Service       0.31      0.43      0.36       477
+                General Inquiry       1.00      0.02      0.04        47
+                Human Resources       0.00      0.00      0.00        69
+                     IT Support       0.89      0.07      0.12       384
+                Product Support       0.43      0.32      0.36       608
+          Returns and Exchanges       1.00      0.03      0.06       163
+            Sales and Pre-Sales       0.00      0.00      0.00       100
+Service Outages and Maintenance       0.89      0.06      0.12       130
+              Technical Support       0.42      0.84      0.56       937
+
+                       accuracy                           0.44      3231
+                      macro avg       0.59      0.24      0.24      3231
+                   weighted avg       0.55      0.44      0.38      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.61      0.74       316
+               Customer Service       0.31      0.43      0.36       477
+                General Inquiry       1.00      0.02      0.04        47
+                Human Resources       0.00      0.00      0.00        69
+                     IT Support       0.89      0.07      0.12       384
+                Product Support       0.43      0.32      0.36       608
+          Returns and Exchanges       1.00      0.03      0.06       163
+            Sales and Pre-Sales       0.00      0.00      0.00       100
+Service Outages and Maintenance       0.89      0.06      0.12       130
+              Technical Support       0.42      0.84      0.56       937
+
+                       accuracy                           0.44      3231
+                      macro avg       0.59      0.24      0.24      3231
+                   weighted avg       0.55      0.44      0.38      3231
+
+
+
+Requirement already satisfied: xgboost in /usr/local/lib/python3.12/dist-packages (3.2.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.0.2)
+Requirement already satisfied: nvidia-nccl-cu12 in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.29.7)
+Requirement already satisfied: scipy in /usr/local/lib/python3.12/dist-packages (from xgboost) (1.16.3)
+Requirement already satisfied: xgboost in /usr/local/lib/python3.12/dist-packages (3.2.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.0.2)
+Requirement already satisfied: nvidia-nccl-cu12 in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.29.7)
+Requirement already satisfied: scipy in /usr/local/lib/python3.12/dist-packages (from xgboost) (1.16.3)
+Requirement already satisfied: xgboost in /usr/local/lib/python3.12/dist-packages (3.2.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.0.2)
+Requirement already satisfied: nvidia-nccl-cu12 in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.29.7)
+Requirement already satisfied: scipy in /usr/local/lib/python3.12/dist-packages (from xgboost) (1.16.3)
+TF-IDF shape: (12921, 10000)TF-IDF shape: (12921, 10000)TF-IDF shape: (12921, 10000)
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: XGBoost — baselineModel: XGBoost — baselineModel: XGBoost — baseline
+
+
+Accuracy: 0.5562Accuracy: 0.5562Accuracy: 0.5562
+
+
+Macro F1: 0.518Macro F1: 0.518Macro F1: 0.518
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.91      0.70      0.79       316
+               Customer Service       0.51      0.45      0.48       477
+                General Inquiry       0.89      0.17      0.29        47
+                Human Resources       0.93      0.41      0.57        69
+                     IT Support       0.65      0.29      0.40       384
+                Product Support       0.53      0.43      0.48       608
+          Returns and Exchanges       0.82      0.29      0.43       163
+            Sales and Pre-Sales       0.85      0.28      0.42       100
+Service Outages and Maintenance       0.86      0.62      0.72       130
+              Technical Support       0.48      0.85      0.61       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.74      0.45      0.52      3231
+                   weighted avg       0.61      0.56      0.54      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.91      0.70      0.79       316
+               Customer Service       0.51      0.45      0.48       477
+                General Inquiry       0.89      0.17      0.29        47
+                Human Resources       0.93      0.41      0.57        69
+                     IT Support       0.65      0.29      0.40       384
+                Product Support       0.53      0.43      0.48       608
+          Returns and Exchanges       0.82      0.29      0.43       163
+            Sales and Pre-Sales       0.85      0.28      0.42       100
+Service Outages and Maintenance       0.86      0.62      0.72       130
+              Technical Support       0.48      0.85      0.61       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.74      0.45      0.52      3231
+                   weighted avg       0.61      0.56      0.54      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.91      0.70      0.79       316
+               Customer Service       0.51      0.45      0.48       477
+                General Inquiry       0.89      0.17      0.29        47
+                Human Resources       0.93      0.41      0.57        69
+                     IT Support       0.65      0.29      0.40       384
+                Product Support       0.53      0.43      0.48       608
+          Returns and Exchanges       0.82      0.29      0.43       163
+            Sales and Pre-Sales       0.85      0.28      0.42       100
+Service Outages and Maintenance       0.86      0.62      0.72       130
+              Technical Support       0.48      0.85      0.61       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.74      0.45      0.52      3231
+                   weighted avg       0.61      0.56      0.54      3231
+
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: XGBoost — sample weightedModel: XGBoost — sample weightedModel: XGBoost — sample weighted
+
+
+Accuracy: 0.5549Accuracy: 0.5549Accuracy: 0.5549
+
+
+Macro F1: 0.5687Macro F1: 0.5687Macro F1: 0.5687
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.82      0.75      0.78       316
+               Customer Service       0.44      0.52      0.48       477
+                General Inquiry       0.58      0.45      0.51        47
+                Human Resources       0.66      0.55      0.60        69
+                     IT Support       0.45      0.50      0.47       384
+                Product Support       0.51      0.47      0.49       608
+          Returns and Exchanges       0.54      0.55      0.54       163
+            Sales and Pre-Sales       0.50      0.54      0.52       100
+Service Outages and Maintenance       0.72      0.72      0.72       130
+              Technical Support       0.59      0.57      0.58       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.58      0.56      0.57      3231
+                   weighted avg       0.56      0.55      0.56      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.82      0.75      0.78       316
+               Customer Service       0.44      0.52      0.48       477
+                General Inquiry       0.58      0.45      0.51        47
+                Human Resources       0.66      0.55      0.60        69
+                     IT Support       0.45      0.50      0.47       384
+                Product Support       0.51      0.47      0.49       608
+          Returns and Exchanges       0.54      0.55      0.54       163
+            Sales and Pre-Sales       0.50      0.54      0.52       100
+Service Outages and Maintenance       0.72      0.72      0.72       130
+              Technical Support       0.59      0.57      0.58       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.58      0.56      0.57      3231
+                   weighted avg       0.56      0.55      0.56      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.82      0.75      0.78       316
+               Customer Service       0.44      0.52      0.48       477
+                General Inquiry       0.58      0.45      0.51        47
+                Human Resources       0.66      0.55      0.60        69
+                     IT Support       0.45      0.50      0.47       384
+                Product Support       0.51      0.47      0.49       608
+          Returns and Exchanges       0.54      0.55      0.54       163
+            Sales and Pre-Sales       0.50      0.54      0.52       100
+Service Outages and Maintenance       0.72      0.72      0.72       130
+              Technical Support       0.59      0.57      0.58       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.58      0.56      0.57      3231
+                   weighted avg       0.56      0.55      0.56      3231
+
+
+
+raw_pred shape: (3231,)raw_pred shape: (3231,)raw_pred shape: (3231,)
+
+
+n_classes: 10n_classes: 10n_classes: 10
+
+
+raw_pred shape after output_margin: (3231, 10)raw_pred shape after output_margin: (3231, 10)raw_pred shape after output_margin: (3231, 10)
+
+
+
+==================================================
+==================================================
+==================================================
+
+
+Model: XGBoost — focal lossModel: XGBoost — focal lossModel: XGBoost — focal loss
+
+
+Accuracy : 0.5611Accuracy : 0.5611Accuracy : 0.5611
+
+
+Macro F1 : 0.5147Macro F1 : 0.5147Macro F1 : 0.5147
+
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.87      0.69      0.77       316
+               Customer Service       0.47      0.49      0.48       477
+                General Inquiry       0.67      0.13      0.21        47
+                Human Resources       0.87      0.38      0.53        69
+                     IT Support       0.55      0.40      0.46       384
+                Product Support       0.51      0.50      0.50       608
+          Returns and Exchanges       0.77      0.36      0.49       163
+            Sales and Pre-Sales       0.69      0.27      0.39       100
+Service Outages and Maintenance       0.85      0.58      0.69       130
+              Technical Support       0.52      0.76      0.62       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.68      0.46      0.51      3231
+                   weighted avg       0.59      0.56      0.55      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.87      0.69      0.77       316
+               Customer Service       0.47      0.49      0.48       477
+                General Inquiry       0.67      0.13      0.21        47
+                Human Resources       0.87      0.38      0.53        69
+                     IT Support       0.55      0.40      0.46       384
+                Product Support       0.51      0.50      0.50       608
+          Returns and Exchanges       0.77      0.36      0.49       163
+            Sales and Pre-Sales       0.69      0.27      0.39       100
+Service Outages and Maintenance       0.85      0.58      0.69       130
+              Technical Support       0.52      0.76      0.62       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.68      0.46      0.51      3231
+                   weighted avg       0.59      0.56      0.55      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.87      0.69      0.77       316
+               Customer Service       0.47      0.49      0.48       477
+                General Inquiry       0.67      0.13      0.21        47
+                Human Resources       0.87      0.38      0.53        69
+                     IT Support       0.55      0.40      0.46       384
+                Product Support       0.51      0.50      0.50       608
+          Returns and Exchanges       0.77      0.36      0.49       163
+            Sales and Pre-Sales       0.69      0.27      0.39       100
+Service Outages and Maintenance       0.85      0.58      0.69       130
+              Technical Support       0.52      0.76      0.62       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.68      0.46      0.51      3231
+                   weighted avg       0.59      0.56      0.55      3231
+
+
+
+
+============================================================
+SESSION: 2026-04-13 15:58:07
+============================================================
+
+Train: 12921 | Test: 3231
+
+Train class distribution:
+category
+Technical Support                  3747
+Product Support                    2432
+Customer Service                   1906
+IT Support                         1534
+Billing and Payments               1262
+Returns and Exchanges               652
+Service Outages and Maintenance     522
+Sales and Pre-Sales                 402
+Human Resources                     278
+General Inquiry                     186
+Name: count, dtype: int64
+
+==================================================
+Model: LR — no balancing
+CV Macro F1: 0.3793 ± 0.0087
+
+Test Accuracy: 0.5522
+Test Macro F1: 0.4093
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.71      0.82       316
+               Customer Service       0.47      0.48      0.47       477
+                General Inquiry       1.00      0.04      0.08        47
+                Human Resources       1.00      0.01      0.03        69
+                     IT Support       0.76      0.31      0.44       384
+                Product Support       0.53      0.51      0.52       608
+          Returns and Exchanges       0.92      0.15      0.25       163
+            Sales and Pre-Sales       0.93      0.14      0.24       100
+Service Outages and Maintenance       0.90      0.48      0.62       130
+              Technical Support       0.48      0.86      0.62       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.80      0.37      0.41      3231
+                   weighted avg       0.64      0.55      0.53      3231
+
+
+==================================================
+Model: LR — class weighted
+CV Macro F1: 0.5216 ± 0.0180
+
+Test Accuracy: 0.5469
+Test Macro F1: 0.5605
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.83      0.77      0.80       316
+               Customer Service       0.44      0.48      0.46       477
+                General Inquiry       0.43      0.60      0.50        47
+                Human Resources       0.49      0.70      0.57        69
+                     IT Support       0.46      0.53      0.49       384
+                Product Support       0.54      0.43      0.48       608
+          Returns and Exchanges       0.50      0.59      0.54       163
+            Sales and Pre-Sales       0.38      0.67      0.48       100
+Service Outages and Maintenance       0.62      0.85      0.71       130
+              Technical Support       0.61      0.51      0.56       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.53      0.61      0.56      3231
+                   weighted avg       0.56      0.55      0.55      3231
+
+
+==================================================
+Model: RF — no balancing
+CV Macro F1: 0.6062 ± 0.0147
+
+Test Accuracy: 0.6775
+Test Macro F1: 0.6603
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.95      0.80      0.87       316
+               Customer Service       0.62      0.63      0.62       477
+                General Inquiry       1.00      0.36      0.53        47
+                Human Resources       0.97      0.52      0.68        69
+                     IT Support       0.93      0.43      0.59       384
+                Product Support       0.77      0.57      0.65       608
+          Returns and Exchanges       0.94      0.50      0.66       163
+            Sales and Pre-Sales       1.00      0.37      0.54       100
+Service Outages and Maintenance       0.92      0.66      0.77       130
+              Technical Support       0.55      0.93      0.69       937
+
+                       accuracy                           0.68      3231
+                      macro avg       0.87      0.58      0.66      3231
+                   weighted avg       0.75      0.68      0.67      3231
+
+
+==================================================
+Model: RF — class weighted
+CV Macro F1: 0.6400 ± 0.0133
+
+Test Accuracy: 0.6939
+Test Macro F1: 0.686
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.97      0.78      0.87       316
+               Customer Service       0.63      0.66      0.64       477
+                General Inquiry       1.00      0.40      0.58        47
+                Human Resources       1.00      0.57      0.72        69
+                     IT Support       0.93      0.45      0.60       384
+                Product Support       0.80      0.60      0.68       608
+          Returns and Exchanges       0.96      0.53      0.68       163
+            Sales and Pre-Sales       1.00      0.42      0.59       100
+Service Outages and Maintenance       0.90      0.72      0.80       130
+              Technical Support       0.56      0.93      0.70       937
+
+                       accuracy                           0.69      3231
+                      macro avg       0.87      0.60      0.69      3231
+                   weighted avg       0.76      0.69      0.69      3231
+
+
+==================================================
+Model: LinearSVM — tuned
+CV Macro F1: 0.6615 ± 0.0150
+
+Test Accuracy: 0.7004
+Test Macro F1: 0.7101
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.88      0.84      0.86       316
+               Customer Service       0.62      0.66      0.64       477
+                General Inquiry       0.73      0.64      0.68        47
+                Human Resources       0.71      0.74      0.72        69
+                     IT Support       0.63      0.65      0.64       384
+                Product Support       0.67      0.64      0.66       608
+          Returns and Exchanges       0.72      0.69      0.71       163
+            Sales and Pre-Sales       0.67      0.63      0.65       100
+Service Outages and Maintenance       0.81      0.84      0.82       130
+              Technical Support       0.71      0.72      0.72       937
+
+                       accuracy                           0.70      3231
+                      macro avg       0.72      0.71      0.71      3231
+                   weighted avg       0.70      0.70      0.70      3231
+
+
+==================================================
+Model: MultinomialNB — tuned
+CV Macro F1: 0.2334 ± 0.0063
+
+Test Accuracy: 0.4383
+Test Macro F1: 0.2368
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.96      0.61      0.74       316
+               Customer Service       0.31      0.43      0.36       477
+                General Inquiry       1.00      0.02      0.04        47
+                Human Resources       0.00      0.00      0.00        69
+                     IT Support       0.89      0.07      0.12       384
+                Product Support       0.43      0.32      0.36       608
+          Returns and Exchanges       1.00      0.03      0.06       163
+            Sales and Pre-Sales       0.00      0.00      0.00       100
+Service Outages and Maintenance       0.89      0.06      0.12       130
+              Technical Support       0.42      0.84      0.56       937
+
+                       accuracy                           0.44      3231
+                      macro avg       0.59      0.24      0.24      3231
+                   weighted avg       0.55      0.44      0.38      3231
+
+Requirement already satisfied: xgboost in /usr/local/lib/python3.12/dist-packages (3.2.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.0.2)
+Requirement already satisfied: nvidia-nccl-cu12 in /usr/local/lib/python3.12/dist-packages (from xgboost) (2.29.7)
+Requirement already satisfied: scipy in /usr/local/lib/python3.12/dist-packages (from xgboost) (1.16.3)
+TF-IDF shape: (12921, 10000)
+
+==================================================
+Model: XGBoost — baseline
+Accuracy: 0.5562
+Macro F1: 0.518
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.91      0.70      0.79       316
+               Customer Service       0.51      0.45      0.48       477
+                General Inquiry       0.89      0.17      0.29        47
+                Human Resources       0.93      0.41      0.57        69
+                     IT Support       0.65      0.29      0.40       384
+                Product Support       0.53      0.43      0.48       608
+          Returns and Exchanges       0.82      0.29      0.43       163
+            Sales and Pre-Sales       0.85      0.28      0.42       100
+Service Outages and Maintenance       0.86      0.62      0.72       130
+              Technical Support       0.48      0.85      0.61       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.74      0.45      0.52      3231
+                   weighted avg       0.61      0.56      0.54      3231
+
+
+==================================================
+Model: XGBoost — sample weighted
+Accuracy: 0.5549
+Macro F1: 0.5687
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.82      0.75      0.78       316
+               Customer Service       0.44      0.52      0.48       477
+                General Inquiry       0.58      0.45      0.51        47
+                Human Resources       0.66      0.55      0.60        69
+                     IT Support       0.45      0.50      0.47       384
+                Product Support       0.51      0.47      0.49       608
+          Returns and Exchanges       0.54      0.55      0.54       163
+            Sales and Pre-Sales       0.50      0.54      0.52       100
+Service Outages and Maintenance       0.72      0.72      0.72       130
+              Technical Support       0.59      0.57      0.58       937
+
+                       accuracy                           0.55      3231
+                      macro avg       0.58      0.56      0.57      3231
+                   weighted avg       0.56      0.55      0.56      3231
+
+raw_pred shape: (3231,)
+n_classes: 10
+raw_pred shape after output_margin: (3231, 10)
+
+==================================================
+Model: XGBoost — focal loss
+Accuracy : 0.5611
+Macro F1 : 0.5147
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.87      0.69      0.77       316
+               Customer Service       0.47      0.49      0.48       477
+                General Inquiry       0.67      0.13      0.21        47
+                Human Resources       0.87      0.38      0.53        69
+                     IT Support       0.55      0.40      0.46       384
+                Product Support       0.51      0.50      0.50       608
+          Returns and Exchanges       0.77      0.36      0.49       163
+            Sales and Pre-Sales       0.69      0.27      0.39       100
+Service Outages and Maintenance       0.85      0.58      0.69       130
+              Technical Support       0.52      0.76      0.62       937
+
+                       accuracy                           0.56      3231
+                      macro avg       0.68      0.46      0.51      3231
+                   weighted avg       0.59      0.56      0.55      3231
+
+
+============================================================
+SESSION: 2026-04-13 16:57:13
+============================================================
+
+raw_pred shape: (3231,)raw_pred shape: (3231,)
+
+n_classes: 10n_classes: 10
+
+raw_pred shape after output_margin: (3231, 10)raw_pred shape after output_margin: (3231, 10)
+
+
+==================================================
+==================================================
+
+Model: XGBoost — focal loss (2)Model: XGBoost — focal loss (2)
+
+Accuracy : 0.4992Accuracy : 0.4992
+
+Macro F1 : 0.425Macro F1 : 0.425
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.85      0.68      0.75       316
+               Customer Service       0.41      0.43      0.42       477
+                General Inquiry       0.42      0.11      0.17        47
+                Human Resources       0.54      0.10      0.17        69
+                     IT Support       0.47      0.33      0.39       384
+                Product Support       0.44      0.42      0.43       608
+          Returns and Exchanges       0.49      0.28      0.35       163
+            Sales and Pre-Sales       0.61      0.25      0.35       100
+Service Outages and Maintenance       0.77      0.55      0.64       130
+              Technical Support       0.48      0.70      0.57       937
+
+                       accuracy                           0.50      3231
+                      macro avg       0.55      0.38      0.42      3231
+                   weighted avg       0.51      0.50      0.49      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.85      0.68      0.75       316
+               Customer Service       0.41      0.43      0.42       477
+                General Inquiry       0.42      0.11      0.17        47
+                Human Resources       0.54      0.10      0.17        69
+                     IT Support       0.47      0.33      0.39       384
+                Product Support       0.44      0.42      0.43       608
+          Returns and Exchanges       0.49      0.28      0.35       163
+            Sales and Pre-Sales       0.61      0.25      0.35       100
+Service Outages and Maintenance       0.77      0.55      0.64       130
+              Technical Support       0.48      0.70      0.57       937
+
+                       accuracy                           0.50      3231
+                      macro avg       0.55      0.38      0.42      3231
+                   weighted avg       0.51      0.50      0.49      3231
+
+
+Encoding test queries...Encoding test queries...
+
+
+==================================================
+==================================================
+
+Model: Zero-Shot (MiniLM)Model: Zero-Shot (MiniLM)
+
+Accuracy : 0.2448Accuracy : 0.2448
+
+Macro F1 : 0.1945Macro F1 : 0.1945
+
+Inference: 48.3556ms/sampleInference: 48.3556ms/sample
+
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.92      0.58      0.71       316
+               Customer Service       0.16      0.21      0.18       477
+                General Inquiry       0.00      0.00      0.00        47
+                Human Resources       0.33      0.06      0.10        69
+                     IT Support       0.00      0.00      0.00       384
+                Product Support       0.21      0.23      0.22       608
+          Returns and Exchanges       0.24      0.10      0.15       163
+            Sales and Pre-Sales       0.04      0.11      0.06       100
+Service Outages and Maintenance       0.15      0.67      0.25       130
+              Technical Support       0.30      0.27      0.28       937
+
+                       accuracy                           0.24      3231
+                      macro avg       0.24      0.22      0.19      3231
+                   weighted avg       0.27      0.24      0.24      3231
+                                 precision    recall  f1-score   support
+
+           Billing and Payments       0.92      0.58      0.71       316
+               Customer Service       0.16      0.21      0.18       477
+                General Inquiry       0.00      0.00      0.00        47
+                Human Resources       0.33      0.06      0.10        69
+                     IT Support       0.00      0.00      0.00       384
+                Product Support       0.21      0.23      0.22       608
+          Returns and Exchanges       0.24      0.10      0.15       163
+            Sales and Pre-Sales       0.04      0.11      0.06       100
+Service Outages and Maintenance       0.15      0.67      0.25       130
+              Technical Support       0.30      0.27      0.28       937
+
+                       accuracy                           0.24      3231
+                      macro avg       0.24      0.22      0.19      3231
+                   weighted avg       0.27      0.24      0.24      3231
+
+
+
+======================================================================
+======================================================================
+
+FINAL RESULTS SUMMARY
+
+============================================================================================================================================
+
+                model  cv_macro_f1_mean  cv_macro_f1_std  test_accuracy  test_macro_f1  train_time_s  inference_ms  accuracy  macro_f1
+    LinearSVM — tuned            0.6615           0.0150         0.7004         0.7101          3.94        0.0977       NaN       NaN
+  RF — class weighted            0.6400           0.0133         0.6939         0.6860        134.87        0.2875       NaN       NaN
+    RF — no balancing            0.6062           0.0147         0.6775         0.6603        112.72        0.2500       NaN       NaN
+  LR — class weighted            0.5216           0.0180         0.5469         0.5605         17.70        0.1111       NaN       NaN
+ XGBoost — focal loss               NaN              NaN         0.4992         0.4250        250.76        0.0000       NaN       NaN
+    LR — no balancing            0.3793           0.0087         0.5522         0.4093         25.25        0.1657       NaN       NaN
+MultinomialNB — tuned            0.2334           0.0063         0.4383         0.2368          1.45        0.0860       NaN       NaN
+   Zero-Shot (MiniLM)               NaN              NaN         0.2448         0.1945          0.00       48.3556       NaN       NaN                model  cv_macro_f1_mean  cv_macro_f1_std  test_accuracy  test_macro_f1  train_time_s  inference_ms  accuracy  macro_f1
+    LinearSVM — tuned            0.6615           0.0150         0.7004         0.7101          3.94        0.0977       NaN       NaN
+  RF — class weighted            0.6400           0.0133         0.6939         0.6860        134.87        0.2875       NaN       NaN
+    RF — no balancing            0.6062           0.0147         0.6775         0.6603        112.72        0.2500       NaN       NaN
+  LR — class weighted            0.5216           0.0180         0.5469         0.5605         17.70        0.1111       NaN       NaN
+ XGBoost — focal loss               NaN              NaN         0.4992         0.4250        250.76        0.0000       NaN       NaN
+    LR — no balancing            0.3793           0.0087         0.5522         0.4093         25.25        0.1657       NaN       NaN
+MultinomialNB — tuned            0.2334           0.0063         0.4383         0.2368          1.45        0.0860       NaN       NaN
+   Zero-Shot (MiniLM)               NaN              NaN         0.2448         0.1945          0.00       48.3556       NaN       NaN
+
+Results saved to: /content/drive/MyDrive/week1_experiment_results.txt
