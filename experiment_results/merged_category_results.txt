@@ -1,0 +1,1426 @@
+=============== ENGLISH MODEL RESULTS - MERGED CATEGORIES ===============
+======================================================================
+MODEL: LR — no balancing
+======================================================================
+CV Macro F1: 0.3858 ± 0.0095
+Accuracy     : 0.6911
+Macro F1     : 0.4147
+Train Time   : 12.46s
+Inference    : 0.0943 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.99      0.65      0.78       315
+      General Inquiry       0.00      0.00      0.00        47
+      Human Resources       1.00      0.07      0.14        69
+      Product Inquiry       0.63      0.69      0.66      1184
+Returns and Exchanges       1.00      0.09      0.16       163
+            Technical       0.70      0.82      0.75      1450
+
+             accuracy                           0.69      3228
+            macro avg       0.72      0.39      0.41      3228
+         weighted avg       0.71      0.69      0.67      3228
+
+--- Confusion Matrix ---
+[[ 204    0    0   73    0   38]
+ [   0    0    0   25    0   22]
+ [   0    0    5   29    0   35]
+ [   0    0    0  815    0  369]
+ [   1    0    0   94   14   54]
+ [   2    0    0  255    0 1193]]
+
+======================================================================
+MODEL: LR — class weighted
+======================================================================
+CV Macro F1: 0.6299 ± 0.0142
+Accuracy     : 0.68
+Macro F1     : 0.6586
+Train Time   : 9.18s
+Inference    : 0.1016 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.77      0.81      0.79       315
+      General Inquiry       0.67      0.72      0.69        47
+      Human Resources       0.50      0.65      0.57        69
+      Product Inquiry       0.65      0.62      0.64      1184
+Returns and Exchanges       0.48      0.65      0.55       163
+            Technical       0.73      0.70      0.71      1450
+
+             accuracy                           0.68      3228
+            macro avg       0.63      0.69      0.66      3228
+         weighted avg       0.68      0.68      0.68      3228
+
+--- Confusion Matrix ---
+[[ 254    0    2   35    5   19]
+ [   1   34    0    4    0    8]
+ [   0    0   45   13    0   11]
+ [  41   12   19  738   52  322]
+ [   8    0    0   28  106   21]
+ [  26    5   24  320   57 1018]]
+
+======================================================================
+MODEL: LinearSVM — tuned
+======================================================================
+CV Macro F1: 0.7327 ± 0.0146
+Accuracy     : 0.7909
+Macro F1     : 0.7696
+Train Time   : 2.46s
+Inference    : 0.0769 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.92      0.84      0.88       315
+      General Inquiry       0.88      0.62      0.72        47
+      Human Resources       0.83      0.65      0.73        69
+      Product Inquiry       0.74      0.77      0.76      1184
+Returns and Exchanges       0.80      0.64      0.71       163
+            Technical       0.81      0.82      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.83      0.73      0.77      3228
+         weighted avg       0.79      0.79      0.79      3228
+
+--- Confusion Matrix ---
+[[ 266    0    0   29    2   18]
+ [   0   29    0    8    1    9]
+ [   0    0   45   17    0    7]
+ [  17    2    1  917   13  234]
+ [   3    0    0   37  105   18]
+ [   4    2    8  234   11 1191]]
+
+======================================================================
+MODEL: MultinomialNB — tuned
+======================================================================
+CV Macro F1: 0.3380 ± 0.0097
+Accuracy     : 0.6227
+Macro F1     : 0.3391
+Train Time   : 1.27s
+Inference    : 0.0868 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.99      0.59      0.74       315
+      General Inquiry       0.00      0.00      0.00        47
+      Human Resources       0.00      0.00      0.00        69
+      Product Inquiry       0.54      0.60      0.57      1184
+Returns and Exchanges       1.00      0.01      0.02       163
+            Technical       0.65      0.77      0.70      1450
+
+             accuracy                           0.62      3228
+            macro avg       0.53      0.33      0.34      3228
+         weighted avg       0.63      0.62      0.60      3228
+
+--- Confusion Matrix ---
+[[ 187    0    0   99    0   29]
+ [   0    0    0   30    0   17]
+ [   0    0    0   36    0   33]
+ [   2    0    0  706    0  476]
+ [   0    0    0  108    2   53]
+ [   0    0    0  335    0 1115]]
+
+======================================================================
+MODEL: RF — no balancing
+======================================================================
+CV Macro F1: 0.5868 ± 0.0110
+Accuracy     : 0.7683
+Macro F1     : 0.6316
+Train Time   : 69.67s
+Inference    : 0.3419 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.99      0.73      0.84       315
+      General Inquiry       0.92      0.26      0.40        47
+      Human Resources       0.95      0.30      0.46        69
+      Product Inquiry       0.72      0.75      0.73      1184
+Returns and Exchanges       1.00      0.37      0.54       163
+            Technical       0.76      0.87      0.81      1450
+
+             accuracy                           0.77      3228
+            macro avg       0.89      0.55      0.63      3228
+         weighted avg       0.79      0.77      0.76      3228
+
+--- Confusion Matrix ---
+[[ 230    0    0   64    0   21]
+ [   0   12    0   14    0   21]
+ [   0    0   21   20    0   28]
+ [   1    1    1  889    0  292]
+ [   0    0    0   71   60   32]
+ [   1    0    0  181    0 1268]]
+
+======================================================================
+MODEL: RF — class weighted
+======================================================================
+CV Macro F1: 0.5999 ± 0.0101
+Accuracy     : 0.772
+Macro F1     : 0.6635
+Train Time   : 87.58s
+Inference    : 0.2189 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.98      0.73      0.84       315
+      General Inquiry       1.00      0.34      0.51        47
+      Human Resources       0.96      0.36      0.53        69
+      Product Inquiry       0.72      0.75      0.74      1184
+Returns and Exchanges       1.00      0.39      0.56       163
+            Technical       0.77      0.88      0.82      1450
+
+             accuracy                           0.77      3228
+            macro avg       0.91      0.57      0.66      3228
+         weighted avg       0.79      0.77      0.77      3228
+
+--- Confusion Matrix ---
+[[ 229    0    0   68    0   18]
+ [   0   16    0   16    0   15]
+ [   0    0   25   18    0   26]
+ [   2    0    1  889    0  292]
+ [   0    0    0   63   63   37]
+ [   2    0    0  178    0 1270]]
+
+======================================================================
+MODEL: XGBoost — baseline
+======================================================================
+Accuracy     : 0.6952
+Macro F1     : 0.5284
+Train Time   : 308.24s
+Inference    : 0.0754 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.98      0.66      0.79       315
+      General Inquiry       1.00      0.19      0.32        47
+      Human Resources       0.87      0.19      0.31        69
+      Product Inquiry       0.64      0.65      0.65      1184
+Returns and Exchanges       0.90      0.21      0.35       163
+            Technical       0.69      0.83      0.75      1450
+
+             accuracy                           0.70      3228
+            macro avg       0.85      0.46      0.53      3228
+         weighted avg       0.72      0.70      0.68      3228
+
+--- Confusion Matrix ---
+[[ 209    0    0   61    0   45]
+ [   0    9    0   17    0   21]
+ [   0    0   13   25    0   31]
+ [   1    0    1  772    4  406]
+ [   0    0    0   83   35   45]
+ [   3    0    1  240    0 1206]]
+
+======================================================================
+MODEL: XGBoost — sample weighted
+======================================================================
+Accuracy     : 0.6856
+Macro F1     : 0.6126
+Train Time   : 229.66s
+Inference    : 0.0734 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.82      0.78      0.80       315
+      General Inquiry       0.56      0.47      0.51        47
+      Human Resources       0.51      0.45      0.48        69
+      Product Inquiry       0.63      0.67      0.65      1184
+Returns and Exchanges       0.54      0.49      0.51       163
+            Technical       0.73      0.72      0.73      1450
+
+             accuracy                           0.69      3228
+            macro avg       0.63      0.60      0.61      3228
+         weighted avg       0.69      0.69      0.69      3228
+
+--- Confusion Matrix ---
+[[ 247    0    1   42    3   22]
+ [   0   22    1    9    1   14]
+ [   1    0   31   21    0   16]
+ [  28   13    9  792   42  300]
+ [   3    0    1   52   80   27]
+ [  24    4   18  340   23 1041]]
+
+======================================================================
+MODEL: LR — all-MiniLM-L6-v2
+======================================================================
+Accuracy     : 0.4297
+Macro F1     : 0.3523
+Train Time   : 35.98s
+Inference    : 0.0066 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.58      0.75      0.65       315
+      General Inquiry       0.07      0.57      0.13        47
+      Human Resources       0.10      0.52      0.17        69
+      Product Inquiry       0.54      0.27      0.36      1184
+Returns and Exchanges       0.16      0.48      0.24       163
+            Technical       0.69      0.47      0.56      1450
+
+             accuracy                           0.43      3228
+            macro avg       0.36      0.51      0.35      3228
+         weighted avg       0.57      0.43      0.47      3228
+
+--- Confusion Matrix ---
+[[235  10  16  21  23  10]
+ [  2  27   1   7   4   6]
+ [  4   1  36   8   8  12]
+ [ 70 167 138 325 214 270]
+ [ 14  16  11  26  79  17]
+ [ 82 142 154 215 172 685]]
+
+======================================================================
+MODEL: RF — all-MiniLM-L6-v2
+======================================================================
+Accuracy     : 0.7426
+Macro F1     : 0.5322
+Train Time   : 116.95s
+Inference    : 0.0496 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       1.00      0.68      0.81       315
+      General Inquiry       1.00      0.13      0.23        47
+      Human Resources       1.00      0.19      0.32        69
+      Product Inquiry       0.70      0.72      0.71      1184
+Returns and Exchanges       1.00      0.20      0.33       163
+            Technical       0.73      0.88      0.80      1450
+
+             accuracy                           0.74      3228
+            macro avg       0.91      0.47      0.53      3228
+         weighted avg       0.77      0.74      0.73      3228
+
+--- Confusion Matrix ---
+[[ 215    0    0   67    0   33]
+ [   0    6    0   28    0   13]
+ [   0    0   13   20    0   36]
+ [   0    0    0  851    0  333]
+ [   0    0    0   83   32   48]
+ [   0    0    0  170    0 1280]]
+
+======================================================================
+MODEL: XGB — all-MiniLM-L6-v2
+======================================================================
+Accuracy     : 0.7714
+Macro F1     : 0.6932
+Train Time   : 264.33s
+Inference    : 0.0441 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.98      0.77      0.86       315
+      General Inquiry       1.00      0.38      0.55        47
+      Human Resources       1.00      0.41      0.58        69
+      Product Inquiry       0.71      0.77      0.74      1184
+Returns and Exchanges       0.93      0.47      0.63       163
+            Technical       0.78      0.84      0.81      1450
+
+             accuracy                           0.77      3228
+            macro avg       0.90      0.61      0.69      3228
+         weighted avg       0.79      0.77      0.77      3228
+
+--- Confusion Matrix ---
+[[ 242    0    0   48    1   24]
+ [   0   18    0   17    0   12]
+ [   0    0   28   18    0   23]
+ [   4    0    0  907    2  271]
+ [   0    0    0   63   77   23]
+ [   2    0    0  227    3 1218]]
+
+======================================================================
+MODEL: SVM — all-MiniLM-L6-v2
+======================================================================
+Accuracy     : 0.5232
+Macro F1     : 0.3959
+Train Time   : 17.19s
+Inference    : 0.0019 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.69      0.70      0.69       315
+      General Inquiry       0.09      0.40      0.14        47
+      Human Resources       0.12      0.38      0.18        69
+      Product Inquiry       0.56      0.41      0.47      1184
+Returns and Exchanges       0.20      0.33      0.25       163
+            Technical       0.66      0.61      0.64      1450
+
+             accuracy                           0.52      3228
+            macro avg       0.39      0.47      0.40      3228
+         weighted avg       0.58      0.52      0.55      3228
+
+--- Confusion Matrix ---
+[[219   8   9  45  14  20]
+ [  2  19   1  11   2  12]
+ [  3   1  26  15   3  21]
+ [ 40 105  81 485 105 368]
+ [ 10  11   9  51  54  28]
+ [ 44  78  92 263  87 886]]
+
+======================================================================
+MODEL: LR — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.4061
+Macro F1     : 0.3363
+Train Time   : 16.15s
+Inference    : 0.0041 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.59      0.75      0.66       315
+      General Inquiry       0.06      0.51      0.11        47
+      Human Resources       0.08      0.54      0.15        69
+      Product Inquiry       0.52      0.24      0.33      1184
+Returns and Exchanges       0.15      0.46      0.23       163
+            Technical       0.69      0.45      0.54      1450
+
+             accuracy                           0.41      3228
+            macro avg       0.35      0.49      0.34      3228
+         weighted avg       0.57      0.41      0.45      3228
+
+--- Confusion Matrix ---
+[[236  12  19  18  19  11]
+ [  1  24   2   7   8   5]
+ [  4   3  37   7   6  12]
+ [ 72 178 165 290 223 256]
+ [ 12  19  19  27  75  11]
+ [ 74 152 198 206 171 649]]
+
+======================================================================
+MODEL: RF — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.7007
+Macro F1     : 0.4392
+Train Time   : 93.16s
+Inference    : 0.0572 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       1.00      0.62      0.77       315
+      General Inquiry       1.00      0.02      0.04        47
+      Human Resources       1.00      0.12      0.21        69
+      Product Inquiry       0.65      0.66      0.66      1184
+Returns and Exchanges       1.00      0.10      0.19       163
+            Technical       0.70      0.86      0.77      1450
+
+             accuracy                           0.70      3228
+            macro avg       0.89      0.40      0.44      3228
+         weighted avg       0.74      0.70      0.68      3228
+
+--- Confusion Matrix ---
+[[ 196    0    0   72    0   47]
+ [   0    1    0   30    0   16]
+ [   0    0    8   21    0   40]
+ [   0    0    0  787    0  397]
+ [   0    0    0   98   17   48]
+ [   0    0    0  197    0 1253]]
+
+======================================================================
+MODEL: XGB — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.7354
+Macro F1     : 0.6481
+Train Time   : 272.75s
+Inference    : 0.0449 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.95      0.74      0.83       315
+      General Inquiry       1.00      0.30      0.46        47
+      Human Resources       1.00      0.39      0.56        69
+      Product Inquiry       0.66      0.74      0.70      1184
+Returns and Exchanges       0.93      0.40      0.56       163
+            Technical       0.75      0.80      0.77      1450
+
+             accuracy                           0.74      3228
+            macro avg       0.88      0.56      0.65      3228
+         weighted avg       0.75      0.74      0.73      3228
+
+--- Confusion Matrix ---
+[[ 232    0    0   59    0   24]
+ [   0   14    0   25    0    8]
+ [   0    0   27   18    0   24]
+ [   4    0    0  875    2  303]
+ [   4    0    0   65   66   28]
+ [   3    0    0  284    3 1160]]
+
+======================================================================
+MODEL: SVM — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.5056
+Macro F1     : 0.3852
+Train Time   : 16.84s
+Inference    : 0.0017 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.65      0.73      0.69       315
+      General Inquiry       0.08      0.40      0.13        47
+      Human Resources       0.12      0.46      0.19        69
+      Product Inquiry       0.56      0.38      0.45      1184
+Returns and Exchanges       0.19      0.30      0.23       163
+            Technical       0.66      0.59      0.62      1450
+
+             accuracy                           0.51      3228
+            macro avg       0.38      0.48      0.39      3228
+         weighted avg       0.58      0.51      0.53      3228
+
+--- Confusion Matrix ---
+[[229  12  13  36   8  17]
+ [  1  19   2  12   5   8]
+ [  4   1  32  11   2  19]
+ [ 44 115 104 452 108 361]
+ [ 13  14   9  48  49  30]
+ [ 59  91 109 250  90 851]]
+
+======================================================================
+MODEL: LR — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.4737
+Macro F1     : 0.3844
+Train Time   : 30.65s
+Inference    : 0.0072 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.59      0.78      0.67       315
+      General Inquiry       0.09      0.57      0.15        47
+      Human Resources       0.13      0.59      0.22        69
+      Product Inquiry       0.56      0.32      0.40      1184
+Returns and Exchanges       0.18      0.48      0.26       163
+            Technical       0.71      0.53      0.60      1450
+
+             accuracy                           0.47      3228
+            macro avg       0.38      0.55      0.38      3228
+         weighted avg       0.59      0.47      0.50      3228
+
+--- Confusion Matrix ---
+[[245  10   9  29  10  12]
+ [  2  27   1   9   4   4]
+ [  2   6  41  10   1   9]
+ [ 70 149 111 373 206 275]
+ [ 11  14  13  29  79  17]
+ [ 86 100 130 220 150 764]]
+
+======================================================================
+MODEL: RF — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.7413
+Macro F1     : 0.5371
+Train Time   : 127.31s
+Inference    : 0.0637 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.99      0.69      0.81       315
+      General Inquiry       1.00      0.13      0.23        47
+      Human Resources       1.00      0.19      0.32        69
+      Product Inquiry       0.68      0.73      0.71      1184
+Returns and Exchanges       1.00      0.22      0.36       163
+            Technical       0.74      0.87      0.80      1450
+
+             accuracy                           0.74      3228
+            macro avg       0.90      0.47      0.54      3228
+         weighted avg       0.77      0.74      0.73      3228
+
+--- Confusion Matrix ---
+[[ 216    0    0   73    0   26]
+ [   0    6    0   29    0   12]
+ [   0    0   13   18    0   38]
+ [   2    0    0  862    0  320]
+ [   0    0    0   89   36   38]
+ [   0    0    0  190    0 1260]]
+
+======================================================================
+MODEL: XGB — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.7664
+Macro F1     : 0.697
+Train Time   : 492.68s
+Inference    : 0.0428 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.97      0.78      0.87       315
+      General Inquiry       1.00      0.36      0.53        47
+      Human Resources       0.97      0.45      0.61        69
+      Product Inquiry       0.70      0.76      0.73      1184
+Returns and Exchanges       0.91      0.50      0.64       163
+            Technical       0.77      0.83      0.80      1450
+
+             accuracy                           0.77      3228
+            macro avg       0.89      0.61      0.70      3228
+         weighted avg       0.78      0.77      0.76      3228
+
+--- Confusion Matrix ---
+[[ 246    0    0   47    0   22]
+ [   0   17    0   19    0   11]
+ [   0    0   31   20    0   18]
+ [   3    0    1  897    4  279]
+ [   1    0    0   54   81   27]
+ [   3    0    0  241    4 1202]]
+
+======================================================================
+MODEL: SVM — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.5663
+Macro F1     : 0.4489
+Train Time   : 33.44s
+Inference    : 0.0058 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.70      0.73      0.72       315
+      General Inquiry       0.14      0.51      0.23        47
+      Human Resources       0.19      0.58      0.28        69
+      Product Inquiry       0.60      0.46      0.52      1184
+Returns and Exchanges       0.23      0.37      0.29       163
+            Technical       0.69      0.64      0.66      1450
+
+             accuracy                           0.57      3228
+            macro avg       0.42      0.55      0.45      3228
+         weighted avg       0.62      0.57      0.58      3228
+
+--- Confusion Matrix ---
+[[231   5  10  35   9  25]
+ [  0  24   1  12   4   6]
+ [  0   7  40  11   1  10]
+ [ 48  70  67 549 104 346]
+ [  8   9   9  54  61  22]
+ [ 44  51  87 259  86 923]]
+
+======================================================================
+MODEL: XGB (improved) — all-MiniLM-L6-v2
+======================================================================
+Accuracy     : 0.7763
+Macro F1     : 0.6959
+Train Time   : 367.07s
+Inference    : 0.0638 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.99      0.76      0.86       315
+      General Inquiry       1.00      0.38      0.55        47
+      Human Resources       1.00      0.41      0.58        69
+      Product Inquiry       0.72      0.77      0.74      1184
+Returns and Exchanges       0.97      0.47      0.63       163
+            Technical       0.78      0.85      0.81      1450
+
+             accuracy                           0.78      3228
+            macro avg       0.91      0.61      0.70      3228
+         weighted avg       0.79      0.78      0.77      3228
+
+--- Confusion Matrix ---
+[[ 239    0    0   55    0   21]
+ [   0   18    0   17    0   12]
+ [   0    0   28   17    0   24]
+ [   1    0    0  914    1  268]
+ [   0    0    0   58   76   29]
+ [   1    0    0  217    1 1231]]
+
+======================================================================
+MODEL: LightGBM — all-MiniLM-L6-v2
+======================================================================
+Accuracy     : 0.7912
+Macro F1     : 0.6908
+Train Time   : 251.14s
+Inference    : 0.4867 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       1.00      0.77      0.87       315
+      General Inquiry       1.00      0.34      0.51        47
+      Human Resources       1.00      0.39      0.56        69
+      Product Inquiry       0.74      0.78      0.76      1184
+Returns and Exchanges       1.00      0.45      0.62       163
+            Technical       0.79      0.87      0.83      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.92      0.60      0.69      3228
+         weighted avg       0.81      0.79      0.79      3228
+
+--- Confusion Matrix ---
+[[ 242    0    0   52    0   21]
+ [   0   16    0   16    0   15]
+ [   0    0   27   17    0   25]
+ [   1    0    0  929    0  254]
+ [   0    0    0   64   73   26]
+ [   0    0    0  183    0 1267]]
+
+======================================================================
+MODEL: SVM (tuned) — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.5074
+Macro F1     : 0.3829
+Train Time   : 14.11s
+Inference    : 0.0025 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.69      0.73      0.71       315
+      General Inquiry       0.07      0.36      0.11        47
+      Human Resources       0.11      0.42      0.18        69
+      Product Inquiry       0.54      0.38      0.45      1184
+Returns and Exchanges       0.19      0.28      0.23       163
+            Technical       0.66      0.60      0.63      1450
+
+             accuracy                           0.51      3228
+            macro avg       0.38      0.46      0.38      3228
+         weighted avg       0.58      0.51      0.53      3228
+
+--- Confusion Matrix ---
+[[229  12  13  40   5  16]
+ [  1  17   2  16   4   7]
+ [  4   1  29  12   3  20]
+ [ 40 124  98 451 105 366]
+ [ 11  14   8  54  46  30]
+ [ 49  88 109 258  80 866]]
+
+======================================================================
+MODEL: XGB (improved) — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.7525
+Macro F1     : 0.643
+Train Time   : 415.03s
+Inference    : 0.188 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.98      0.74      0.85       315
+      General Inquiry       1.00      0.28      0.43        47
+      Human Resources       1.00      0.33      0.50        69
+      Product Inquiry       0.68      0.75      0.72      1184
+Returns and Exchanges       0.96      0.40      0.57       163
+            Technical       0.76      0.83      0.79      1450
+
+             accuracy                           0.75      3228
+            macro avg       0.90      0.56      0.64      3228
+         weighted avg       0.77      0.75      0.75      3228
+
+--- Confusion Matrix ---
+[[ 234    0    0   53    0   28]
+ [   0   13    0   25    0    9]
+ [   0    0   23   22    0   24]
+ [   2    0    0  892    0  290]
+ [   2    0    0   66   66   29]
+ [   0    0    0  246    3 1201]]
+
+======================================================================
+MODEL: LightGBM — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.7627
+Macro F1     : 0.6143
+Train Time   : 299.73s
+Inference    : 0.5375 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.99      0.72      0.83       315
+      General Inquiry       1.00      0.21      0.35        47
+      Human Resources       1.00      0.29      0.45        69
+      Product Inquiry       0.70      0.77      0.73      1184
+Returns and Exchanges       1.00      0.34      0.51       163
+            Technical       0.77      0.86      0.81      1450
+
+             accuracy                           0.76      3228
+            macro avg       0.91      0.53      0.61      3228
+         weighted avg       0.79      0.76      0.75      3228
+
+--- Confusion Matrix ---
+[[ 226    0    0   63    0   26]
+ [   0   10    0   27    0   10]
+ [   0    0   20   23    0   26]
+ [   2    0    0  908    0  274]
+ [   0    0    0   74   56   33]
+ [   0    0    0  208    0 1242]]
+
+======================================================================
+MODEL: SVM (tuned) — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.5573
+Macro F1     : 0.4329
+Train Time   : 36.32s
+Inference    : 0.0054 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.70      0.72      0.71       315
+      General Inquiry       0.12      0.47      0.19        47
+      Human Resources       0.17      0.52      0.25        69
+      Product Inquiry       0.59      0.45      0.51      1184
+Returns and Exchanges       0.22      0.34      0.27       163
+            Technical       0.68      0.64      0.66      1450
+
+             accuracy                           0.56      3228
+            macro avg       0.41      0.52      0.43      3228
+         weighted avg       0.61      0.56      0.58      3228
+
+--- Confusion Matrix ---
+[[228   5   9  42   7  24]
+ [  1  22   1  11   4   8]
+ [  0   7  36  12   1  13]
+ [ 44  76  72 534 101 357]
+ [  7  11  10  57  55  23]
+ [ 44  58  88 253  83 924]]
+
+======================================================================
+MODEL: XGB (improved) — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.7856
+Macro F1     : 0.7143
+Train Time   : 796.28s
+Inference    : 0.0738 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.98      0.78      0.87       315
+      General Inquiry       1.00      0.38      0.55        47
+      Human Resources       0.97      0.49      0.65        69
+      Product Inquiry       0.72      0.78      0.75      1184
+Returns and Exchanges       0.94      0.48      0.64       163
+            Technical       0.79      0.85      0.82      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.90      0.63      0.71      3228
+         weighted avg       0.80      0.79      0.78      3228
+
+--- Confusion Matrix ---
+[[ 245    0    0   47    0   23]
+ [   0   18    0   21    0    8]
+ [   0    0   34   16    0   19]
+ [   3    0    1  927    2  251]
+ [   1    0    0   60   79   23]
+ [   1    0    0  213    3 1233]]
+
+======================================================================
+MODEL: LightGBM — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.7986
+Macro F1     : 0.6954
+Train Time   : 532.71s
+Inference    : 0.6004 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.98      0.77      0.86       315
+      General Inquiry       1.00      0.34      0.51        47
+      Human Resources       1.00      0.41      0.58        69
+      Product Inquiry       0.73      0.81      0.77      1184
+Returns and Exchanges       0.99      0.45      0.62       163
+            Technical       0.81      0.87      0.84      1450
+
+             accuracy                           0.80      3228
+            macro avg       0.92      0.61      0.70      3228
+         weighted avg       0.81      0.80      0.79      3228
+
+--- Confusion Matrix ---
+[[ 243    0    0   54    0   18]
+ [   0   16    0   22    0    9]
+ [   0    0   28   19    0   22]
+ [   3    0    0  959    0  222]
+ [   1    0    0   64   73   25]
+ [   1    0    0  189    1 1259]]
+
+======================================================================
+MODEL: Hybrid SVM — all-MiniLM-L6-v2
+======================================================================
+Accuracy     : 0.7407
+Macro F1     : 0.72
+Train Time   : 50.25s
+Inference    : 0.0134 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.82      0.82      0.82       315
+      General Inquiry       0.78      0.68      0.73        47
+      Human Resources       0.67      0.64      0.65        69
+      Product Inquiry       0.70      0.70      0.70      1184
+Returns and Exchanges       0.65      0.65      0.65       163
+            Technical       0.77      0.78      0.77      1450
+
+             accuracy                           0.74      3228
+            macro avg       0.73      0.71      0.72      3228
+         weighted avg       0.74      0.74      0.74      3228
+
+--- Confusion Matrix ---
+[[ 259    0    0   37    3   16]
+ [   0   32    0    6    0    9]
+ [   1    0   44   13    0   11]
+ [  33    5    9  823   27  287]
+ [   4    0    0   33  106   20]
+ [  18    4   13  260   28 1127]]
+
+======================================================================
+MODEL: Hybrid SVM — paraphrase-MiniLM-L12-v2
+======================================================================
+Accuracy     : 0.7413
+Macro F1     : 0.7178
+Train Time   : 19.9s
+Inference    : 0.0081 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.81      0.83      0.82       315
+      General Inquiry       0.78      0.66      0.71        47
+      Human Resources       0.67      0.67      0.67        69
+      Product Inquiry       0.71      0.69      0.70      1184
+Returns and Exchanges       0.62      0.65      0.63       163
+            Technical       0.77      0.78      0.77      1450
+
+             accuracy                           0.74      3228
+            macro avg       0.73      0.71      0.72      3228
+         weighted avg       0.74      0.74      0.74      3228
+
+--- Confusion Matrix ---
+[[ 260    0    0   32    6   17]
+ [   0   31    1    7    0    8]
+ [   0    0   46   13    0   10]
+ [  33    4    9  817   32  289]
+ [   5    0    0   33  106   19]
+ [  22    5   13  250   27 1133]]
+
+======================================================================
+MODEL: Hybrid SVM — all-mpnet-base-v2
+======================================================================
+Accuracy     : 0.7522
+Macro F1     : 0.7308
+Train Time   : 39.6s
+Inference    : 0.0134 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.85      0.83      0.84       315
+      General Inquiry       0.79      0.66      0.72        47
+      Human Resources       0.71      0.67      0.69        69
+      Product Inquiry       0.71      0.71      0.71      1184
+Returns and Exchanges       0.63      0.66      0.64       163
+            Technical       0.78      0.79      0.78      1450
+
+             accuracy                           0.75      3228
+            macro avg       0.75      0.72      0.73      3228
+         weighted avg       0.75      0.75      0.75      3228
+
+--- Confusion Matrix ---
+[[ 260    0    0   31    5   19]
+ [   0   31    0    9    0    7]
+ [   1    0   46   14    0    8]
+ [  25    5    8  844   28  274]
+ [   3    0    0   33  107   20]
+ [  17    3   11  250   29 1140]]
+
+======================================================================
+MODEL: LinearSVM — multi-input
+======================================================================
+CV Macro F1: 0.6863 ± 0.0097
+Accuracy     : 0.7664
+Macro F1     : 0.7285
+Train Time   : 3.3s
+Inference    : 0.0884 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.90      0.84      0.87       315
+      General Inquiry       0.78      0.53      0.63        47
+      Human Resources       0.79      0.59      0.68        69
+      Product Inquiry       0.72      0.75      0.73      1184
+Returns and Exchanges       0.70      0.64      0.67       163
+            Technical       0.79      0.79      0.79      1450
+
+             accuracy                           0.77      3228
+            macro avg       0.78      0.69      0.73      3228
+         weighted avg       0.77      0.77      0.77      3228
+
+--- Confusion Matrix ---
+[[ 266    0    0   28    3   18]
+ [   0   25    0   12    0   10]
+ [   0    0   41   15    0   13]
+ [  16    4    4  886   24  250]
+ [   3    0    0   32  104   24]
+ [  11    3    7  259   18 1152]]
+
+======================================================================
+MODEL: LinearSVM — final (concat + tags)
+======================================================================
+CV Macro F1: 0.7354 ± 0.0095
+Accuracy     : 0.7965
+Macro F1     : 0.7781
+Train Time   : 3.17s
+Inference    : 0.0915 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.92      0.84      0.88       315
+      General Inquiry       0.91      0.62      0.73        47
+      Human Resources       0.87      0.67      0.75        69
+      Product Inquiry       0.75      0.78      0.76      1184
+Returns and Exchanges       0.83      0.64      0.72       163
+            Technical       0.81      0.83      0.82      1450
+
+             accuracy                           0.80      3228
+            macro avg       0.85      0.73      0.78      3228
+         weighted avg       0.80      0.80      0.80      3228
+
+--- Confusion Matrix ---
+[[ 264    0    0   30    2   19]
+ [   0   29    0    8    1    9]
+ [   0    0   46   16    0    7]
+ [  16    1    1  921   10  235]
+ [   2    0    0   37  104   20]
+ [   5    2    6  222    8 1207]]
+
+======================================================================
+MODEL: LinearSVM — char ngrams
+======================================================================
+CV Macro F1: 0.5391 ± 0.0161
+Accuracy     : 0.6416
+Macro F1     : 0.563
+Train Time   : 24.55s
+Inference    : 1.0857 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.76      0.81      0.78       315
+      General Inquiry       0.35      0.51      0.42        47
+      Human Resources       0.32      0.59      0.42        69
+      Product Inquiry       0.64      0.56      0.60      1184
+Returns and Exchanges       0.38      0.61      0.47       163
+            Technical       0.71      0.68      0.69      1450
+
+             accuracy                           0.64      3228
+            macro avg       0.53      0.63      0.56      3228
+         weighted avg       0.66      0.64      0.65      3228
+
+--- Confusion Matrix ---
+[[254   1   3  26   9  22]
+ [  0  24   0   7   6  10]
+ [  2   1  41  12   1  12]
+ [ 42  16  37 666  78 345]
+ [  7   1   1  35  99  20]
+ [ 31  25  45 297  65 987]]
+
+======================================================================
+MODEL: LinearSVM — word + char
+======================================================================
+CV Macro F1: 0.7263 ± 0.0096
+Accuracy     : 0.785
+Macro F1     : 0.7539
+Train Time   : 27.74s
+Inference    : 0.704 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.91      0.83      0.87       315
+      General Inquiry       0.79      0.57      0.67        47
+      Human Resources       0.80      0.65      0.72        69
+      Product Inquiry       0.74      0.77      0.75      1184
+Returns and Exchanges       0.79      0.64      0.71       163
+            Technical       0.80      0.82      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.81      0.71      0.75      3228
+         weighted avg       0.79      0.79      0.78      3228
+
+--- Confusion Matrix ---
+[[ 263    0    0   28    2   22]
+ [   0   27    0    9    2    9]
+ [   0    0   45   15    0    9]
+ [  17    4    4  911   12  236]
+ [   2    0    0   38  104   19]
+ [   7    3    7  237   12 1184]]
+
+======================================================================
+MODEL: LinearSVM — word+char (C=1.5)
+======================================================================
+CV Macro F1: 0.7220 ± 0.0082
+Accuracy     : 0.7825
+Macro F1     : 0.7547
+Train Time   : 25.42s
+Inference    : 0.7098 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.90      0.84      0.87       315
+      General Inquiry       0.80      0.60      0.68        47
+      Human Resources       0.79      0.65      0.71        69
+      Product Inquiry       0.73      0.76      0.75      1184
+Returns and Exchanges       0.79      0.64      0.71       163
+            Technical       0.80      0.81      0.81      1450
+
+             accuracy                           0.78      3228
+            macro avg       0.80      0.72      0.75      3228
+         weighted avg       0.78      0.78      0.78      3228
+
+--- Confusion Matrix ---
+[[ 265    0    0   29    2   19]
+ [   0   28    0    8    2    9]
+ [   0    0   45   14    0   10]
+ [  18    4    4  903   12  243]
+ [   2    0    0   38  104   19]
+ [   8    3    8  238   12 1181]]
+
+======================================================================
+MODEL: LinearSVM — word+char (C=2)
+======================================================================
+CV Macro F1: 0.7263 ± 0.0096
+Accuracy     : 0.785
+Macro F1     : 0.7539
+Train Time   : 28.11s
+Inference    : 1.1851 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.91      0.83      0.87       315
+      General Inquiry       0.79      0.57      0.67        47
+      Human Resources       0.80      0.65      0.72        69
+      Product Inquiry       0.74      0.77      0.75      1184
+Returns and Exchanges       0.79      0.64      0.71       163
+            Technical       0.80      0.82      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.81      0.71      0.75      3228
+         weighted avg       0.79      0.79      0.78      3228
+
+--- Confusion Matrix ---
+[[ 263    0    0   28    2   22]
+ [   0   27    0    9    2    9]
+ [   0    0   45   15    0    9]
+ [  17    4    4  911   12  236]
+ [   2    0    0   38  104   19]
+ [   7    3    7  237   12 1184]]
+
+======================================================================
+MODEL: LinearSVM — word+char (C=3)
+======================================================================
+CV Macro F1: 0.7300 ± 0.0109
+Accuracy     : 0.7887
+Macro F1     : 0.7574
+Train Time   : 31.25s
+Inference    : 0.7066 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.92      0.84      0.88       315
+      General Inquiry       0.82      0.57      0.68        47
+      Human Resources       0.80      0.65      0.72        69
+      Product Inquiry       0.74      0.77      0.76      1184
+Returns and Exchanges       0.80      0.63      0.71       163
+            Technical       0.80      0.82      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.81      0.72      0.76      3228
+         weighted avg       0.79      0.79      0.79      3228
+
+--- Confusion Matrix ---
+[[ 264    0    0   27    2   22]
+ [   0   27    0    9    2    9]
+ [   0    0   45   16    0    8]
+ [  17    3    4  916   12  232]
+ [   2    0    0   38  103   20]
+ [   5    3    7  234   10 1191]]
+
+======================================================================
+MODEL: LinearSVM — word+char (C=5)
+======================================================================
+CV Macro F1: 0.7328 ± 0.0116
+Accuracy     : 0.79
+Macro F1     : 0.761
+Train Time   : 39.22s
+Inference    : 0.7043 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.92      0.82      0.87       315
+      General Inquiry       0.84      0.57      0.68        47
+      Human Resources       0.82      0.65      0.73        69
+      Product Inquiry       0.74      0.78      0.76      1184
+Returns and Exchanges       0.81      0.64      0.72       163
+            Technical       0.80      0.82      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.82      0.72      0.76      3228
+         weighted avg       0.79      0.79      0.79      3228
+
+--- Confusion Matrix ---
+[[ 258    0    0   31    2   24]
+ [   0   27    0    9    2    9]
+ [   0    0   45   16    0    8]
+ [  16    2    4  921   12  229]
+ [   2    0    0   36  105   20]
+ [   5    3    6  234    8 1194]]
+
+======================================================================
+MODEL: Word+Char SVM
+======================================================================
+CV Macro F1: 0.7331 ± 0.0107
+Accuracy     : 0.7977
+Macro F1     : 0.7737
+Train Time   : 45.95s
+Inference    : 1.5967 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.92      0.82      0.87       315
+      General Inquiry       0.88      0.64      0.74        47
+      Human Resources       0.84      0.62      0.72        69
+      Product Inquiry       0.75      0.79      0.77      1184
+Returns and Exchanges       0.84      0.64      0.73       163
+            Technical       0.81      0.83      0.82      1450
+
+             accuracy                           0.80      3228
+            macro avg       0.84      0.72      0.77      3228
+         weighted avg       0.80      0.80      0.80      3228
+
+--- Confusion Matrix ---
+[[ 259    0    0   30    2   24]
+ [   0   30    0    8    0    9]
+ [   0    0   43   16    0   10]
+ [  13    3    4  940    9  215]
+ [   3    0    0   35  105   20]
+ [   7    1    4  231    9 1198]]
+
+======================================================================
+MODEL: LinearSVM — SMOTE Oversampling
+======================================================================
+Accuracy     : 0.7862
+Macro F1     : 0.7717
+Train Time   : 14.97s
+Inference    : 0.0013 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.89      0.84      0.86       315
+      General Inquiry       0.89      0.68      0.77        47
+      Human Resources       0.83      0.64      0.72        69
+      Product Inquiry       0.73      0.77      0.75      1184
+Returns and Exchanges       0.79      0.65      0.71       163
+            Technical       0.80      0.81      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.82      0.73      0.77      3228
+         weighted avg       0.79      0.79      0.79      3228
+
+--- Confusion Matrix ---
+[[ 265    0    0   29    1   20]
+ [   0   32    0    7    1    7]
+ [   1    0   44   17    0    7]
+ [  21    2    2  911   14  234]
+ [   4    0    0   35  106   18]
+ [   8    2    7  241   12 1180]]
+
+======================================================================
+MODEL: LinearSVM — SMOTE Oversampling
+======================================================================
+Accuracy     : 0.7862
+Macro F1     : 0.7717
+Train Time   : 14.68s
+Inference    : 0.001 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.89      0.84      0.86       315
+      General Inquiry       0.89      0.68      0.77        47
+      Human Resources       0.83      0.64      0.72        69
+      Product Inquiry       0.73      0.77      0.75      1184
+Returns and Exchanges       0.79      0.65      0.71       163
+            Technical       0.80      0.81      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.82      0.73      0.77      3228
+         weighted avg       0.79      0.79      0.79      3228
+
+--- Confusion Matrix ---
+[[ 265    0    0   29    1   20]
+ [   0   32    0    7    1    7]
+ [   1    0   44   17    0    7]
+ [  21    2    2  911   14  234]
+ [   4    0    0   35  106   18]
+ [   8    2    7  241   12 1180]]
+
+======================================================================
+MODEL: LinearSVM — Random Undersampling
+======================================================================
+Accuracy     : 0.4195
+Macro F1     : 0.368
+Train Time   : 0.07s
+Inference    : 0.0008 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.69      0.69      0.69       315
+      General Inquiry       0.11      0.79      0.19        47
+      Human Resources       0.12      0.65      0.20        69
+      Product Inquiry       0.49      0.29      0.36      1184
+Returns and Exchanges       0.16      0.53      0.24       163
+            Technical       0.66      0.44      0.52      1450
+
+             accuracy                           0.42      3228
+            macro avg       0.37      0.56      0.37      3228
+         weighted avg       0.55      0.42      0.45      3228
+
+--- Confusion Matrix ---
+[[217   8   4  31  39  16]
+ [  1  37   1   3   2   3]
+ [  3   2  45   5   4  10]
+ [ 43 155 127 338 243 278]
+ [  8  10  13  23  86  23]
+ [ 44 130 184 290 171 631]]
+
+======================================================================
+MODEL: LinearSVM — SMOTETomek
+======================================================================
+Accuracy     : 0.7897
+Macro F1     : 0.7765
+Train Time   : 19.21s
+Inference    : 0.0011 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.90      0.84      0.87       315
+      General Inquiry       0.89      0.70      0.79        47
+      Human Resources       0.83      0.65      0.73        69
+      Product Inquiry       0.74      0.77      0.76      1184
+Returns and Exchanges       0.78      0.64      0.70       163
+            Technical       0.81      0.82      0.81      1450
+
+             accuracy                           0.79      3228
+            macro avg       0.82      0.74      0.78      3228
+         weighted avg       0.79      0.79      0.79      3228
+
+--- Confusion Matrix ---
+[[ 265    0    0   28    1   21]
+ [   0   33    0    6    0    8]
+ [   1    0   45   16    0    7]
+ [  19    2    2  912   15  234]
+ [   3    0    0   37  105   18]
+ [   7    2    7  231   14 1189]]
+
+=============== ENGLISH MODEL RESULTS ===============
+======================================================================
+MODEL: LinearSVM — SMOTE Oversampling
+======================================================================
+Accuracy     : 0.7893
+Macro F1     : 0.7695
+Train Time   : 13.11s
+Inference    : 0.001 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.89      0.86      0.87       305
+      General Inquiry       0.94      0.65      0.77        46
+      Human Resources       0.86      0.64      0.73        66
+      Product Inquiry       0.74      0.76      0.75      1137
+Returns and Exchanges       0.79      0.59      0.68       154
+            Technical       0.80      0.83      0.82      1396
+
+             accuracy                           0.79      3104
+            macro avg       0.84      0.72      0.77      3104
+         weighted avg       0.79      0.79      0.79      3104
+
+--- Confusion Matrix ---
+[[ 263    0    0   31    1   10]
+ [   0   30    0    8    0    8]
+ [   2    0   42   12    0   10]
+ [  20    0    3  864   15  235]
+ [   0    0    0   39   91   24]
+ [  12    2    4  210    8 1160]]
+
+======================================================================
+MODEL: LinearSVM — Random Undersampling
+======================================================================
+Accuracy     : 0.4259
+Macro F1     : 0.3636
+Train Time   : 0.06s
+Inference    : 0.0006 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.55      0.71      0.62       305
+      General Inquiry       0.12      0.80      0.20        46
+      Human Resources       0.13      0.67      0.22        66
+      Product Inquiry       0.50      0.29      0.37      1137
+Returns and Exchanges       0.16      0.48      0.24       154
+            Technical       0.67      0.44      0.53      1396
+
+             accuracy                           0.43      3104
+            macro avg       0.35      0.57      0.36      3104
+         weighted avg       0.55      0.43      0.46      3104
+
+--- Confusion Matrix ---
+[[217   7  12  19  17  33]
+ [  0  37   0   4   2   3]
+ [  1   4  44   7   3   7]
+ [ 97 134 126 330 207 243]
+ [  6  18  10  23  74  23]
+ [ 70 120 147 271 168 620]]
+
+======================================================================
+MODEL: LinearSVM — SMOTETomek
+======================================================================
+Accuracy     : 0.7903
+Macro F1     : 0.7693
+Train Time   : 13.63s
+Inference    : 0.0013 ms/sample
+
+--- Classification Report ---
+                       precision    recall  f1-score   support
+
+ Billing and Payments       0.89      0.86      0.88       305
+      General Inquiry       0.97      0.65      0.78        46
+      Human Resources       0.86      0.64      0.73        66
+      Product Inquiry       0.74      0.76      0.75      1137
+Returns and Exchanges       0.76      0.58      0.66       154
+            Technical       0.80      0.83      0.82      1396
+
+             accuracy                           0.79      3104
+            macro avg       0.84      0.72      0.77      3104
+         weighted avg       0.79      0.79      0.79      3104
+
+--- Confusion Matrix ---
+[[ 263    0    0   28    2   12]
+ [   0   30    0    8    0    8]
+ [   2    0   42   12    0   10]
+ [  20    0    2  864   19  232]
+ [   0    0    0   41   90   23]
+ [  10    1    5  208    8 1164]]
